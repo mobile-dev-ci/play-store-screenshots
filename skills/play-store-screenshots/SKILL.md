@@ -33,44 +33,53 @@ Do not begin scaffolding until you have the essential inputs. If the user provid
 
 ## Project Architecture
 
-This skill uses a **config-driven architecture** — the key structural improvement over a monolithic single-file approach.
+This skill generates **two files** in a new folder. No framework, no `npm install`, no build step.
 
 ```
-your-project/
-├── public/
-│   ├── app-icon.png               ← user's app icon
-│   └── screenshots/               ← user's raw Android app screenshots
-│       ├── screen1.png
-│       └── screen2.png
-└── src/app/
-    ├── layout.tsx                 ← font loading, base styles
-    ├── page.tsx                   ← layout engine, components, export logic
-    ├── overview/
-    │   └── page.tsx               ← all-slides grid view for QA
-    └── screenshots.config.ts      ← ALL customization: copy, colors, slides
+play-store-screenshots/
+├── index.html      ← rendering engine, export logic, overview mode (don't edit)
+├── config.js       ← ALL customization: copy, colors, slides (edit this)
+└── screenshots/    ← user's raw Android app screenshots + app icon
+    ├── app-icon.png
+    ├── screen1.png
+    └── screen2.png
 ```
 
-> **Note on exported files:** Clicking "Export All" triggers browser downloads — files land in your system's **Downloads folder**, not back into the project directory. Rename and organize them from there before uploading to Play Console.
+**The AI fills in `config.js`. `index.html` reads from it and renders everything.**
 
-**The AI fills in `screenshots.config.ts`. The layout engine in `page.tsx` reads from it.**
+To use: serve the folder with a one-line local server (required for loading local images), open in Chrome, click Export All.
 
-This separation means content iteration — changing a headline, swapping a screenshot, adjusting a color — never risks breaking layout components. The agent only needs to touch one file to customize output.
+```bash
+# Pick any one of these — whatever is available:
+python3 -m http.server 8080
+npx serve .
+```
+
+Then open `http://localhost:8080`.
+
+> **Note on exported files:** Clicking "Export All" triggers browser downloads — files land in your system's **Downloads folder**. Rename and organize from there before uploading to Play Console.
+
+### Should you commit this project to git?
+
+No. The screenshot generator is a **disposable tool** — once you have the PNGs, the project has done its job. The only files worth keeping long-term are:
+- The exported PNGs (upload to Play Console)
+- `config.js` if you want to regenerate or tweak later
+
+Work in any temporary folder. Do not add it to your app's repository.
 
 ---
 
-## screenshots.config.ts Reference
+## config.js Reference
 
-Create this file at `src/app/screenshots.config.ts`. This is the single source of truth for all content and visual decisions.
+`config.js` is the only file the AI needs to write. It's plain JavaScript — no TypeScript, no imports, no build step.
 
-A complete working example for a fictional app is available at [`example-config.ts`](./example-config.ts) in this skill directory — copy it as a starting point.
+A complete working example for a fictional app is available at [`example-config.js`](./example-config.js) in this skill directory — copy it as a starting point.
 
-```typescript
-// No need to import a type — TypeScript will infer the shape from the object.
-// Add `as const` if you want strict literal types.
-export const config = {
+```javascript
+const config = {
   app: {
     name: "Your App",
-    icon: "/app-icon.png",
+    icon: "screenshots/app-icon.png",
   },
 
   brand: {
@@ -87,23 +96,22 @@ export const config = {
   theme: "clean-light",
 
   device: {
-    // CSS mockup tint — no PNG asset required
     color: "black",           // "black" | "white" | "silver"
   },
 
   slides: [
     {
       id: "hero",
-      layout: "hero-center",
-      screenshot: "/screenshots/screen1.png",
+      layout: "text-top",
+      screenshot: "screenshots/screen1.png",
       label: "INTRODUCING",
       headline: "Your app name.\nYour outcome.",
       // Leave subtext empty on hero — let the visual breathe
     },
     {
       id: "feature-one",
-      layout: "hero-right",
-      screenshot: "/screenshots/screen2.png",
+      layout: "text-bottom",
+      screenshot: "screenshots/screen2.png",
       label: "FEATURE NAME",
       headline: "Short benefit\nstatement here.",
       subtext: "One supporting sentence, maximum.",
@@ -117,7 +125,7 @@ export const config = {
     // "gradient" | "solid" | "screenshot-backed"
     style: "gradient",
     // Only used when style is "screenshot-backed"
-    screenshot: "/screenshots/screen1.png",
+    screenshot: "screenshots/screen1.png",
   },
 
   // Optional: set enabled: true and add tablet screenshots to activate
@@ -135,12 +143,12 @@ export const config = {
 
 When `locales` contains more than one entry, change string values to locale maps:
 
-```typescript
+```javascript
 slides: [
   {
     id: "hero",
-    layout: "hero-center",
-    screenshot: { en: "/screenshots/en/screen1.png", de: "/screenshots/de/screen1.png" },
+    layout: "text-top",
+    screenshot: { en: "screenshots/en/screen1.png", de: "screenshots/de/screen1.png" },
     label: { en: "INTRODUCING", de: "NEU" },
     headline: { en: "Your app.\nYour way.", de: "Deine App.\nDein Weg." },
   },
@@ -399,39 +407,79 @@ These rules apply to every headline on every slide:
 
 ### Setup
 
+Create a new folder and two files inside it:
+
 ```bash
-# Use whatever package manager is available (bun, pnpm, yarn, npm)
-npx create-next-app@latest screenshots --typescript --tailwind --app --src-dir --no-import-alias
-cd screenshots
-npm install html-to-image
+mkdir play-store-screenshots
+cd play-store-screenshots
+mkdir screenshots
+# Copy the user's app screenshots and icon into ./screenshots/
 ```
 
-Place the user's app screenshots in `public/screenshots/` and their app icon at `public/app-icon.png`.
+Then create `config.js` (AI fills this in) and `index.html` (AI generates this). That's the entire setup — no package manager, no install step.
+
+### index.html structure
+
+The `<head>` loads everything via CDN — no local dependencies:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Google Fonts — match user's preference, default to Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- html-to-image for PNG export -->
+  <script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
+  <!-- User's config — must come before the main script -->
+  <script src="config.js"></script>
+</head>
+<body>
+  <!-- Controls bar: locale selector, theme/device switchers, export buttons -->
+  <div id="controls">...</div>
+
+  <!-- Visible preview: slides scaled to fit viewport -->
+  <div id="preview">...</div>
+
+  <!-- Overview panel: all slides in a grid at 20% scale, toggled via button -->
+  <div id="overview" style="display:none">...</div>
+
+  <!-- Off-screen export canvases: always full resolution, never scaled -->
+  <div id="export-canvases" style="position:fixed;left:-9999px;top:0;z-index:-1">...</div>
+
+  <script>
+    // All rendering and export logic here
+  </script>
+</body>
+</html>
+```
 
 ### Typography
 
-Load via `next/font/google` in `layout.tsx`. Good defaults: **Inter**, **Plus Jakarta Sans**, **DM Sans**. Match the user's preference if they specified one.
+Load the font via the `<link>` tag above. Good defaults: **Inter**, **Plus Jakarta Sans**, **DM Sans**. Match the user's preference if they specified one.
 
-Scale all typography relative to canvas width — never hardcode `px` values in slide components:
+Scale all font sizes relative to canvas width — never hardcode `px` values in slide rendering:
 
-```typescript
+```javascript
 // Typography scale — derive from canvas width W
-const T = (W: number) => ({
-  label:      W * 0.028,   // all-caps category label
-  headline:   W * 0.090,   // standard headline (1–2 lines)
-  headlineLg: W * 0.100,   // hero slide headline (larger)
-  subtext:    W * 0.038,   // supporting sentence
-  caption:    W * 0.030,   // small secondary text
-});
+function typography(W) {
+  return {
+    label:      W * 0.028,   // all-caps category label
+    headline:   W * 0.090,   // standard headline (1–2 lines)
+    headlineLg: W * 0.100,   // hero slide headline (larger)
+    subtext:    W * 0.038,   // supporting sentence
+    caption:    W * 0.030,   // small secondary text
+  };
+}
 ```
 
-This ensures text renders correctly at all export resolutions without any changes.
+This ensures text renders correctly at all export resolutions without changes.
 
 ### Theme System
 
-Four named themes as design token sets. The `theme` key in config switches between them:
+Four named themes as plain JS objects. The `config.theme` key selects between them:
 
-```typescript
+```javascript
 const THEMES = {
   "clean-light": {
     bg: "#FFFFFF",
@@ -461,31 +509,37 @@ const THEMES = {
     muted: "#7A7A7A",
     surface: "#EDE9E3",
   },
-} as const;
+};
 
 const theme = THEMES[config.theme];
 ```
 
-### Page Structure
+### Preview scaling
 
-`page.tsx` renders three regions:
+The visible preview scales slides to fit the browser window. The off-screen export canvases stay at full resolution — never scale them:
 
-1. **Controls bar** — locale selector (if multi-locale), theme selector, device color picker, export buttons
-2. **Visible preview column** — all slides stacked vertically, scaled to fit the viewport using `ResizeObserver`
-3. **Off-screen export canvases** — positioned at `left: -9999px`, always full resolution, one per slide per locale
+```javascript
+// Scale visible preview to container width
+const previewScale = previewContainer.offsetWidth / PHONE_W;
+previewSlide.style.transform = `scale(${previewScale})`;
+previewSlide.style.transformOrigin = "top left";
 
-```typescript
-// Scale the visible preview to the container width
-// Never scale the off-screen export canvases — they must stay at full resolution
-const previewScale = containerWidth / PHONE_W;
-// Apply to preview wrapper: style={{ transform: `scale(${previewScale})`, transformOrigin: "top left" }}
+// Export canvas: always PHONE_W × PHONE_H, no transform applied
 ```
 
-### Overview Route
+### Overview mode
 
-Create `src/app/overview/page.tsx` — renders all slides in a responsive 3-column grid at 20% scale. No export buttons. Used for QA: review narrative arc, check for layout repetition, confirm visual variety at a glance before exporting.
+A toggle button switches between the normal preview (one slide at a time) and an overview grid (all slides at 20% scale in 3 columns). No separate page or route needed — just toggle `display:none` on the two sections:
 
-This is the fastest way to spot problems — open `/overview`, look at all 6–8 slides together, adjust, refresh.
+```javascript
+document.getElementById("btn-overview").addEventListener("click", () => {
+  const isOverview = document.getElementById("overview").style.display !== "none";
+  document.getElementById("preview").style.display = isOverview ? "block" : "none";
+  document.getElementById("overview").style.display = isOverview ? "none" : "grid";
+});
+```
+
+Overview is the fastest QA tool — see all slides together, spot layout repetition, check visual variety before exporting.
 
 ---
 
@@ -529,22 +583,20 @@ Use `html-to-image` (preferred over `html2canvas` for superior CSS gradient, fil
 
 This is required for correct font and image rendering. The first call warms up lazy-loaded assets; the second produces clean output. Skipping the first call produces blurry text or missing images.
 
-```typescript
-import { toPng } from "html-to-image";
-
-async function exportSlide(element: HTMLElement, filename: string) {
-  // Move element temporarily on-screen — html-to-image requires the element
-  // to be visible in the document for correct rendering
+```javascript
+// htmlToImage is available globally from the CDN script tag
+async function exportSlide(element, filename) {
+  // Move element temporarily on-screen — html-to-image requires visibility
   element.style.left = "0px";
   element.style.top = "0px";
   element.style.position = "fixed";
   element.style.zIndex = "9999";
 
   // First call: warms up fonts and images — result is discarded
-  await toPng(element, { pixelRatio: 1 });
+  await htmlToImage.toPng(element, { pixelRatio: 1 });
 
   // Second call: clean, correct output
-  const dataUrl = await toPng(element, { pixelRatio: 1 });
+  const dataUrl = await htmlToImage.toPng(element, { pixelRatio: 1 });
 
   // Restore to off-screen position
   element.style.left = "-9999px";
@@ -581,7 +633,7 @@ exports/feature-graphic/
 
 ### Bulk export
 
-```typescript
+```javascript
 async function exportAll() {
   for (const locale of config.locales) {
     // Export phone slides
@@ -597,9 +649,10 @@ async function exportAll() {
     if (fg) await exportSlide(fg, `feature-graphic-${FG_W}x${FG_H}.png`);
 
     // Export tablet slides (if enabled)
-    if (config.tablet?.enabled) {
+    if (config.tablet && config.tablet.enabled) {
       for (const size of config.tablet.sizes) {
-        const [W, H] = size === "10-inch" ? [TAB10_W, TAB10_H] : [TAB7_W, TAB7_H];
+        const W = size === "10-inch" ? TAB10_W : TAB7_W;
+        const H = size === "10-inch" ? TAB10_H : TAB7_H;
         for (let i = 0; i < config.slides.length; i++) {
           const el = document.getElementById(`canvas-tablet-${size}-${locale}-${config.slides[i].id}`);
           if (!el) continue;
@@ -627,19 +680,18 @@ exports/phone/
 
 RTL detection and layout mirroring:
 
-```typescript
+```javascript
 const RTL_LOCALES = new Set(["ar", "he", "fa", "ur"]);
 const isRtl = RTL_LOCALES.has(selectedLocale);
 
-// Apply to each slide container:
-// dir={isRtl ? "rtl" : "ltr"}
+// Apply dir attribute to each slide container element:
+// slideEl.setAttribute("dir", isRtl ? "rtl" : "ltr");
 //
-// For hero-left / hero-right layouts, mirror phone position:
-// hero-left in LTR → phone right, text left
-// hero-left in RTL → phone left, text right (automatically handled by dir="rtl" + flex)
+// CSS flexbox respects dir automatically — text and layout mirror
+// without needing manual position overrides.
 ```
 
-When `config.locales` contains multiple entries, build a locale selector UI in the controls bar. Changing the locale re-renders all preview slides in the selected language.
+When `config.locales` contains multiple entries, build a locale `<select>` in the controls bar. On change, re-render all preview slides in the selected language.
 
 ---
 

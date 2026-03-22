@@ -1,6 +1,6 @@
 /**
- * Example screenshots.config.ts for "FocusFlow" — a productivity/focus timer app.
- * Copy this to src/app/screenshots.config.ts in your generated project and modify it.
+ * Example config.js for "FocusFlow" — a productivity/focus timer app.
+ * Copy this to config.js in your generated project and modify it.
  *
  * This example shows:
  *  - 5 phone slides using text-top, text-bottom, and split-screen layouts
@@ -9,10 +9,10 @@
  *  - Single locale (English)
  */
 
-export const config = {
+const config = {
   app: {
     name: "FocusFlow",
-    icon: "/app-icon.png",
+    icon: "screenshots/app-icon.png",
   },
 
   brand: {
@@ -35,7 +35,7 @@ export const config = {
     {
       id: "hero",
       layout: "text-top",
-      screenshot: "/screenshots/screen-timer.png",
+      screenshot: "screenshots/screen-timer.png",
       label: "FOCUS DIFFERENTLY",
       headline: "Deep work.\nNo distractions.",
       // No subtext on hero — let the visual breathe
@@ -43,7 +43,7 @@ export const config = {
     {
       id: "flow-sessions",
       layout: "text-top",
-      screenshot: "/screenshots/screen-sessions.png",
+      screenshot: "screenshots/screen-sessions.png",
       label: "FLOW SESSIONS",
       headline: "25 minutes.\nThen breathe.",
       subtext: "Pomodoro-style sessions built around how your brain actually works.",
@@ -51,7 +51,7 @@ export const config = {
     {
       id: "stats",
       layout: "text-bottom",
-      screenshot: "/screenshots/screen-stats.png",
+      screenshot: "screenshots/screen-stats.png",
       label: "WEEKLY INSIGHTS",
       headline: "See what's\nactually working.",
       subtext: "Visualize your focus streaks and spot your most productive hours.",
@@ -59,7 +59,7 @@ export const config = {
     {
       id: "block",
       layout: "split-screen",
-      screenshot: "/screenshots/screen-block.png",
+      screenshot: "screenshots/screen-block.png",
       label: "DISTRACTION BLOCKING",
       headline: "The apps\ncan wait.",
       subtext: "Block any app during focus sessions. One tap, no willpower needed.",
@@ -67,7 +67,7 @@ export const config = {
     {
       id: "widgets",
       layout: "text-bottom",
-      screenshot: "/screenshots/screen-widget.png",
+      screenshot: "screenshots/screen-widget.png",
       label: "HOME SCREEN WIDGETS",
       headline: "Your streak.\nRight there.",
       // No subtext — the visual says it all

@@ -151,75 +151,113 @@ slides: [
 
 ## Slide Layout Templates
 
-Six named layouts cover the full range of compositions. **Vary the layout on every slide — never use the same layout twice in a row.**
+### The golden rule: vertical stacking, large phone
 
-### `hero-center`
-Phone centered horizontally on canvas. Label and headline stacked above the phone, centered. Use this for the **first slide only**.
+A 1080×1920 canvas is tall and narrow. **Side-by-side horizontal layouts waste this space** — they shrink the phone to fit next to text, leaving large empty areas that look sparse and unprofessional.
+
+Always stack vertically. The phone should be **large and dominant**, occupying 60–70% of the canvas height. Text sits above or below it.
+
+**Default phone size for all layouts:** width = `PHONE_W * 0.82` (≈882px), maintaining the device aspect ratio (~1:2.15). This fills the canvas properly with room for a subtle drop shadow.
+
+Five named layouts. **Vary the layout across slides — never use the same layout twice in a row.**
+
+---
+
+### `text-top` *(primary layout — use for most feature slides)*
+
+Text block in the top ~32% of the canvas. Phone large and centered below, slightly cropped at the bottom edge (creates depth and focuses attention on the top of the UI).
 
 ```
 ┌─────────────────────┐
 │      LABEL          │
-│   Headline text     │
-│   here for hero     │
-│      ┌─────┐        │
-│      │phone│        │
-│      │     │        │
-│      │     │        │
-│      └─────┘        │
+│   Headline text     │  ← top 32% of canvas
+│   here              │
+│   Subtext line.     │
+│   ┌───────────────┐ │
+│   │               │ │
+│   │  [screenshot] │ │  ← phone: 82% canvas width, bottom-anchored
+│   │               │ │    slightly cropped at bottom
+│   │               │ │
+└───┴───────────────┴─┘
+```
+
+Sizing: phone `width = PHONE_W * 0.82`, centered horizontally, top edge starts at ~30% of canvas height.
+
+---
+
+### `text-bottom` *(use for 1–2 slides per set)*
+
+Phone large and centered in the top ~65% of the canvas, slightly cropped at the top (status bar hidden). Text block in the bottom 35%.
+
+```
+┌───┬───────────────┬─┐
+│   │               │ │
+│   │  [screenshot] │ │  ← phone: 82% canvas width, top-anchored
+│   │               │ │    slightly cropped at top
+│   │               │ │
+│   └───────────────┘ │
+│      LABEL          │
+│   Headline text     │  ← bottom 35% of canvas
+│   Subtext line.     │
 └─────────────────────┘
 ```
 
-### `hero-left`
-Phone aligned to the right side (~65% from left edge). Label and headline stacked on the left. Good for feature slides.
+Sizing: phone `width = PHONE_W * 0.82`, top edge at -3% of canvas (crops status bar), centered horizontally.
+
+---
+
+### `split-screen` *(use for 1 slide per set — strong contrast)*
+
+Canvas divided horizontally at ~38%. Top panel: solid `brand.primary` background with label and headline in white. Bottom panel: canvas background color. Phone centered, overlapping the divider by ~8% of canvas height — creates visual tension and depth.
 
 ```
 ┌─────────────────────┐
-│ LABEL     ┌──────┐  │
-│ Headline  │phone │  │
-│ text      │      │  │
-│ here      │      │  │
-│           └──────┘  │
-└─────────────────────┘
-```
-
-### `hero-right`
-Mirror of `hero-left`. Phone on the left, text on the right. Alternate with `hero-left` for visual rhythm across slides.
-
-```
-┌─────────────────────┐
-│  ┌──────┐  LABEL    │
-│  │phone │  Headline │
-│  │      │  text     │
-│  │      │  here     │
-│  └──────┘           │
-└─────────────────────┘
-```
-
-### `split-screen`
-Canvas divided horizontally at ~45%. Top section: headline and label on a colored background panel (using `brand.primary`). Bottom section: phone mockup centered, slightly overlapping the divider. Creates strong visual contrast.
-
-```
-┌─────────────────────┐
-│ ■■■■■■■■■■■■■■■■■■■ │  ← colored panel (brand.primary bg)
+│ ■■■■■■■■■■■■■■■■■■■ │  ← brand.primary panel (top 38%)
 │ LABEL               │
 │ Headline here       │
-├──────────────────── ┤
-│        ┌─────┐      │
-│        │phone│      │  ← phone overlaps divider slightly
-│        └─────┘      │
+├──────────┬──────────┤
+│    ┌─────┴────┐     │
+│    │          │     │  ← phone overlaps divider, centered
+│    │[screenshot]    │     width = PHONE_W * 0.72
+│    │          │     │
+│    └──────────┘     │
 └─────────────────────┘
 ```
 
-### `full-bleed`
-App screenshot fills entire canvas edge-to-edge with no phone frame. Text overlay at top or bottom with a semi-transparent gradient scrim for readability. Use sparingly — **maximum 1 per set**, and only when the screenshot itself is visually compelling enough to stand alone.
+---
+
+### `full-bleed` *(use maximum 1 per set)*
+
+App screenshot fills the entire canvas edge-to-edge with no phone frame. Short text overlay (label + 1-line headline only) at the top or bottom with a semi-transparent gradient scrim. Only use when the screenshot itself is visually rich enough to stand alone.
+
+```
+┌─────────────────────┐
+│ LABEL               │  ← scrim overlay, top 20%
+│ Headline            │
+│                     │
+│  [full screenshot   │
+│   fills canvas      │
+│   edge to edge]     │
+│                     │
+└─────────────────────┘
+```
+
+---
 
 ### `feature-graphic` *(feature graphic only — not a phone slide)*
+
 Landscape canvas (1024×500px). No device mockup. Two composition options:
 
 - **Icon-left:** App icon (180×180) on left third, headline + subtext on right two thirds
 - **Icon-center:** App icon centered at top, headline below, subtext below that
 
 Background fills the full canvas using the chosen `featureGraphic.style`.
+
+---
+
+### What happened to `hero-left` / `hero-right`?
+
+Side-by-side horizontal layouts (text left, phone right or vice versa) consistently produce poor results on portrait canvases — the phone is forced small to fit beside text, and large empty areas appear above and below. **Do not implement these layouts.** Use `text-top` or `text-bottom` instead, which achieve layout variety while keeping the phone large.
 
 ---
 
@@ -262,6 +300,14 @@ Frame colors by `color` prop:
 - `"black"` → frame `#1C1C1E`, border `#3A3A3C`, screen background `#000000`
 - `"white"` → frame `#F2F2F7`, border `#D1D1D6`, screen background `#FFFFFF`
 - `"silver"` → frame `#8E8E93`, border `#636366`, screen background `#111111`
+
+> **Critical:** Never use brand colors for the phone frame or border. The frame must always use one of the neutral color sets above. Using a brand color (e.g. the app's accent orange or purple) on the frame border looks amateurish and draws attention away from the screen content. The frame should recede visually, not compete with the UI.
+
+The frame should also have a soft drop shadow to lift it off the background:
+```css
+box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18), 0 8px 24px rgba(0, 0, 0, 0.10);
+```
+Adjust opacity based on theme: lighter shadow for light backgrounds, stronger for dark.
 
 Side buttons (optional detail, improves realism):
 - Power button: right side, top 38% from top, height 8% of total height, width 0.6% of width

@@ -3,7 +3,7 @@
  * Copy this to src/app/screenshots.config.ts in your generated project and modify it.
  *
  * This example shows:
- *  - 5 phone slides with varied layouts
+ *  - 5 phone slides using text-top, text-bottom, and split-screen layouts
  *  - Feature graphic using the gradient style
  *  - Dark theme
  *  - Single locale (English)
@@ -34,7 +34,7 @@ export const config = {
   slides: [
     {
       id: "hero",
-      layout: "hero-center",
+      layout: "text-top",
       screenshot: "/screenshots/screen-timer.png",
       label: "FOCUS DIFFERENTLY",
       headline: "Deep work.\nNo distractions.",
@@ -42,7 +42,7 @@ export const config = {
     },
     {
       id: "flow-sessions",
-      layout: "hero-right",
+      layout: "text-top",
       screenshot: "/screenshots/screen-sessions.png",
       label: "FLOW SESSIONS",
       headline: "25 minutes.\nThen breathe.",
@@ -50,7 +50,7 @@ export const config = {
     },
     {
       id: "stats",
-      layout: "hero-left",
+      layout: "text-bottom",
       screenshot: "/screenshots/screen-stats.png",
       label: "WEEKLY INSIGHTS",
       headline: "See what's\nactually working.",
@@ -66,7 +66,7 @@ export const config = {
     },
     {
       id: "widgets",
-      layout: "hero-center",
+      layout: "text-bottom",
       screenshot: "/screenshots/screen-widget.png",
       label: "HOME SCREEN WIDGETS",
       headline: "Your streak.\nRight there.",

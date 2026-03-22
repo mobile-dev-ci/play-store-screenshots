@@ -1,3 +1,8 @@
+---
+name: play-store-screenshots
+description: Use when building Google Play Store screenshot pages, generating exportable marketing screenshots for Android apps,  or creating programmatic screenshot generators with Next.js. Triggers on google play store, play store, screenshots, marketing assets, phone mockup.
+---
+
 # Play Store Screenshots Generator
 
 ## Overview & Core Philosophy

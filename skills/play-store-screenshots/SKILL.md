@@ -8,26 +8,85 @@ Unlike the Apple App Store, Play Store also requires a **Feature Graphic** (1024
 
 ---
 
-## Discovery Phase: Required Questions
+## Discovery Phase
 
-Before writing any code, gather these from the user:
+Only **one question** needs to be asked. Everything else is derived from the assets automatically.
 
-**Essential:**
-- App screenshot file paths (PNG captures from Android device or emulator)
-- App icon path (PNG, ideally 512×512)
-- Brand color palette (primary, background, text, accent)
-- Typography preference (Google Fonts name, or "use system default")
-- Top 3–6 features to highlight — for each, ask: *"what problem does this solve for the user?"* not just what it does
-- Desired slide count (2–8; Play Store minimum is 2, maximum is 8)
-- Visual style direction (clean/minimal, bold/dark, colorful, editorial)
+### The only required question
 
-**Optional:**
-- 7" or 10" tablet screenshots (for a tablet-specific listing)
-- Landscape phone screenshots preference
-- Multi-language localization requirements
-- Feature graphic background style preference (gradient, solid, screenshot-backed)
+> "What are your top 3–6 features? For each, briefly describe what problem it solves for your users."
 
-Do not begin scaffolding until you have the essential inputs. If the user provides a vague style direction, offer three concrete examples and let them pick.
+This is a marketing decision — it cannot be derived from screenshots or code. The user knows their app's value proposition. Ask this first, before looking at anything else.
+
+If the user gives feature names without problems (e.g. "offline mode, dark theme, favourites"), follow up:
+
+> "For each one — what would frustrate a user if that feature didn't exist?"
+
+That answer is what you will write the headline from.
+
+---
+
+### Everything else: auto-derive
+
+Once the user has answered the features question, derive all remaining inputs without asking:
+
+**Screenshot paths** — Scan the current directory (and one level of subdirectories) for `.png` and `.jpg` files. List what you find and confirm with the user. Do not ask them to type paths.
+
+**App icon** — Check standard Android project paths first:
+```
+app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+```
+If not an Android project, look for any file named `icon*.png` or `logo*.png` in the current directory.
+
+**Brand colors** — Visually analyze the provided screenshots:
+- **Primary**: dominant UI color — usually the toolbar, header, or button color
+- **Background**: the color behind most content (white, cream, black, etc.)
+- **Text**: infer from background — dark bg → `#FFFFFF`, light bg → `#111111`
+- **Accent**: CTA buttons, highlights, active states
+- **Secondary**: gradient partner — slightly shift primary hue by 15–20 degrees
+
+State your derived colors and let the user correct any that are wrong.
+
+**Theme** — Infer from the screenshot background color:
+- White or light gray background → `"clean-light"`
+- Near-black or dark background → `"dark-bold"`
+- Warm beige / cream / earthy tones → `"editorial"`
+- The app's primary brand color fills the background → `"vibrant"`
+
+**Device frame color** — Match the app's tone:
+- Dark app (dark toolbar, dark backgrounds) → `"black"` frame
+- Light app (white/light backgrounds) → `"white"` frame
+
+**Typography** — Default to **Inter**. Do not ask. Only change if the user volunteers a font preference or the app visually uses a distinctive typeface.
+
+**Slide count** — Default to **5 slides**. Do not ask. 5 is the optimal number — enough variety, not overwhelming to produce.
+
+**Everything else** — Use these defaults silently:
+- `device.color`: derived above
+- `tablet.enabled`: `false`
+- `locales`: `["en"]`
+- `featureGraphic.style`: `"gradient"`
+- `featureGraphic.subtext`: `"Available on Google Play"`
+
+Only ask about tablets, locales, or landscape if the user mentions them first.
+
+---
+
+### Summary: what to ask vs. what to derive
+
+| Input | Action |
+|---|---|
+| Features + problems | **Ask** — the only required question |
+| Screenshot paths | Derive — scan directory, confirm |
+| App icon | Derive — check standard Android paths |
+| Brand colors | Derive — analyze screenshots visually |
+| Theme | Derive — infer from background color |
+| Font | Derive — default Inter |
+| Slide count | Derive — default 5 |
+| Device frame color | Derive — match app tone |
+| Feature graphic style | Derive — default gradient |
+| Tablet / locale / landscape | Derive — default off/en/portrait |
 
 ---
 

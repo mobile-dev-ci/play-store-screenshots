@@ -39,13 +39,9 @@ This skill uses a **config-driven architecture** — the key structural improvem
 your-project/
 ├── public/
 │   ├── app-icon.png               ← user's app icon
-│   ├── screenshots/               ← user's raw Android app screenshots
-│   │   ├── screen1.png
-│   │   └── screen2.png
-│   └── exports/                   ← generated output lands here
-│       ├── phone/
-│       ├── tablet/
-│       └── feature-graphic/
+│   └── screenshots/               ← user's raw Android app screenshots
+│       ├── screen1.png
+│       └── screen2.png
 └── src/app/
     ├── layout.tsx                 ← font loading, base styles
     ├── page.tsx                   ← layout engine, components, export logic
@@ -53,6 +49,8 @@ your-project/
     │   └── page.tsx               ← all-slides grid view for QA
     └── screenshots.config.ts      ← ALL customization: copy, colors, slides
 ```
+
+> **Note on exported files:** Clicking "Export All" triggers browser downloads — files land in your system's **Downloads folder**, not back into the project directory. Rename and organize them from there before uploading to Play Console.
 
 **The AI fills in `screenshots.config.ts`. The layout engine in `page.tsx` reads from it.**
 
@@ -64,7 +62,11 @@ This separation means content iteration — changing a headline, swapping a scre
 
 Create this file at `src/app/screenshots.config.ts`. This is the single source of truth for all content and visual decisions.
 
+A complete working example for a fictional app is available at [`example-config.ts`](./example-config.ts) in this skill directory — copy it as a starting point.
+
 ```typescript
+// No need to import a type — TypeScript will infer the shape from the object.
+// Add `as const` if you want strict literal types.
 export const config = {
   app: {
     name: "Your App",
@@ -182,6 +184,16 @@ Phone aligned to the right side (~65% from left edge). Label and headline stacke
 
 ### `hero-right`
 Mirror of `hero-left`. Phone on the left, text on the right. Alternate with `hero-left` for visual rhythm across slides.
+
+```
+┌─────────────────────┐
+│  ┌──────┐  LABEL    │
+│  │phone │  Headline │
+│  │      │  text     │
+│  │      │  here     │
+│  └──────┘           │
+└─────────────────────┘
+```
 
 ### `split-screen`
 Canvas divided horizontally at ~45%. Top section: headline and label on a colored background panel (using `brand.primary`). Bottom section: phone mockup centered, slightly overlapping the divider. Creates strong visual contrast.
@@ -343,7 +355,7 @@ These rules apply to every headline on every slide:
 
 ```bash
 # Use whatever package manager is available (bun, pnpm, yarn, npm)
-npx create-next-app@latest screenshots --typescript --tailwind --app
+npx create-next-app@latest screenshots --typescript --tailwind --app --src-dir --no-import-alias
 cd screenshots
 npm install html-to-image
 ```
@@ -618,3 +630,15 @@ Check all of these before exporting final assets.
 - [ ] Screenshots inside the mockup are not stretched or distorted — maintain original aspect ratio
 - [ ] The double-call export pattern was used (skipping it causes blurry fonts)
 - [ ] Filenames are zero-padded (`01-`, `02-`, not `1-`, `2-`)
+
+---
+
+## After Export: Uploading to Play Console
+
+1. Go to [Google Play Console](https://play.google.com/console) → your app → **Store presence** → **Main store listing**
+2. Under **Phone screenshots**, upload the files from `exports/phone/en/` in order
+3. Under **Feature graphic**, upload `feature-graphic-1024x500.png`
+4. If tablet screenshots were generated, upload them under the corresponding tablet section
+5. Save and submit for review
+
+Play Store processes uploads instantly — no waiting for asset approval before you can submit a release.

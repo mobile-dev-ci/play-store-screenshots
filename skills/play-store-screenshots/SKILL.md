@@ -17,7 +17,7 @@ Before writing any code, gather these from the user:
 - App icon path (PNG, ideally 512×512)
 - Brand color palette (primary, background, text, accent)
 - Typography preference (Google Fonts name, or "use system default")
-- Top 3–6 features to highlight
+- Top 3–6 features to highlight — for each, ask: *"what problem does this solve for the user?"* not just what it does
 - Desired slide count (2–8; Play Store minimum is 2, maximum is 8)
 - Visual style direction (clean/minimal, bold/dark, colorful, editorial)
 
@@ -333,30 +333,161 @@ const FG_H = 500;
 
 ---
 
-## Copy Strategy & Messaging Rules
+## Copy Strategy & Messaging
 
-These rules apply to every headline on every slide:
+Each slide has three text elements: a **label**, a **headline**, and an optional **subtext**. Each has a different job. Get all three right and the slide sells itself in one second.
 
-**One idea per slide.** No compound claims joined by "and" — they dilute impact and confuse the message. If you find yourself writing "and", you have two slides, not one.
+---
 
-**3–5 words per line.** Must be readable at thumbnail size. Break lines intentionally, not by wrapping. The line break is part of the design.
+### Step 1: Go from feature description to copy
 
-**Short, common words.** 1–2 syllables preferred. Test: would a 12-year-old understand this instantly?
+When the user describes a feature, do not describe it back to them. Ask instead:
 
-**One-second test.** Hold the phone at arm's length. If meaning is unclear, rewrite. The viewer is scrolling — you have one second.
+> *"What would make someone anxious or frustrated if this feature didn't exist?"*
 
-**Outcomes over features.** Describe what the user achieves, not what the app does.
+That anxiety is your headline. The feature is just the solution to it.
 
-| Bad | Better |
-|---|---|
-| "Advanced task management system" | "Done by noon.\nEvery day." |
-| "Sync across all your devices" | "Your phone.\nYour tablet.\nOne list." |
-| "Powerful analytics dashboard" | "See what's\nactually working." |
-| "Seamless user experience" | "It just works.\nEvery time." |
-| "Real-time push notifications" | "Never miss\nwhat matters." |
-| "Customizable home screen widgets" | "Your info.\nRight there." |
+**Example:**
+- User says: *"Offline mode — the app works without internet"*
+- Anxiety: Being somewhere with no signal when you need the app
+- Headline: `"No signal?\nNo problem."` or `"Every prayer.\nAlways there."`
+- NOT: `"Works offline"` or `"Offline support"`
 
-**Feature graphic headline** follows the same rules but can be slightly longer (up to 8 words) since it has more horizontal space. Still: outcome-first, short words.
+**Example:**
+- User says: *"You can change the font size"*
+- Anxiety: Straining to read small text, especially for older users
+- Headline: `"Bigger text.\nClearer words."` or `"Read your way."`
+- NOT: `"Adjustable font size"` or `"Accessibility features"`
+
+**Example:**
+- User says: *"Save favourites / bookmark prayers"*
+- Anxiety: Scrolling through everything to find the one you use most
+- Headline: `"Your prayers.\nAlways close."` or `"Save what\nyou love."`
+- NOT: `"Favourites system"` or `"Bookmark your content"`
+
+---
+
+### Step 2: Write the headline
+
+The headline is the largest text on the slide. It must land in under one second at thumbnail size.
+
+**Six formulas that work. Pick the one that fits the feature's emotional angle:**
+
+#### Formula 1: Solve the pain
+State the problem and imply the solution. Short, punchy.
+> `"No signal?\nNo problem."`
+> `"Stop searching.\nJust find it."`
+> `"Forgot again?\nNever again."`
+
+#### Formula 2: Own it (possessive + outcome)
+Creates a sense of personal ownership. Feels intimate.
+> `"Your prayers.\nAlways close."`
+> `"Your pace.\nYour progress."`
+> `"Your data.\nYour call."`
+
+#### Formula 3: The moment (paint the exact instant)
+Describes the specific moment the user benefits. Makes it tangible.
+> `"Every prayer.\nAt your fingertips."`
+> `"Done by noon.\nEvery day."`
+> `"Open the app.\nStart the calm."`
+
+#### Formula 4: Simple contrast (before vs after, implied)
+Two short lines. First creates tension, second resolves it.
+> `"Bigger text.\nClearer words."`
+> `"One tap.\nInstant access."`
+> `"Less noise.\nMore focus."`
+
+#### Formula 5: The invitation (active verb + reward)
+Starts with a verb. Energetic, direct.
+> `"Save what\nyou love."`
+> `"Find anything.\nInstantly."`
+> `"Switch languages.\nAnytime."`
+
+#### Formula 6: The declaration (confident statement of identity)
+What the app IS, stated boldly. Best for hero slide.
+> `"Every prayer.\nAt your fingertips."`
+> `"Focus like\nyou mean it."`
+> `"Your daily\ndevotion. Simplified."`
+
+---
+
+### Step 3: Write the label
+
+The label is the small all-caps tag above the headline. Its job is to prime the reader — tell them what category of benefit is coming so the headline lands harder.
+
+**Rules:**
+- 1–3 words, all caps
+- Name the benefit category, not the feature name
+- Should make the reader curious about the headline below it
+
+| Feature | Bad label | Good label |
+|---|---|---|
+| Offline mode | `OFFLINE MODE` | `100% OFFLINE` |
+| Font size setting | `ACCESSIBILITY` | `READ COMFORTABLY` |
+| Favourites | `BOOKMARKS` | `FAVOURITES` |
+| Bilingual | `LANGUAGES` | `BILINGUAL` |
+| Dark mode | `DARK MODE` | `EASIER ON EYES` |
+| Daily reminder | `NOTIFICATIONS` | `DAILY REMINDER` |
+
+---
+
+### Step 4: Write the subtext
+
+The subtext is one supporting sentence below the headline. It is optional — leave it empty when the headline is strong enough alone (especially on the hero slide).
+
+When you do use it:
+- Add ONE specific detail the headline deliberately left vague
+- Make it conversational, not corporate
+- Max 8–10 words
+- Do not restate the headline in different words
+
+| Headline | Bad subtext | Good subtext |
+|---|---|---|
+| `"Every prayer.\nAt your fingertips."` | "Access all your prayers easily in one place" | "Aarti • Chalisa • Mantra — all in one place" |
+| `"No signal?\nNo problem."` | "The app works without an internet connection" | "Every prayer, always available." |
+| `"Bigger text.\nClearer words."` | "You can adjust the font size for better readability" | "Adjust font size to suit you." |
+| `"Save what\nyou love."` | "Save your favourite prayers as bookmarks" | "Quick access to your most-used prayers." |
+
+---
+
+### Rules that apply to everything
+
+**One idea per slide.** If you find yourself writing "and", you have two slides, not one.
+
+**3–5 words per line.** Break lines intentionally — the line break is part of the design, not an accident of wrapping.
+
+**Short words win.** 1–2 syllables. Test: would a 10-year-old understand this instantly?
+
+**Verbs over nouns.** "Save what you love" beats "Favourites management". "Find anything" beats "Search functionality".
+
+**Never use these words:** seamless, powerful, advanced, robust, intuitive, innovative, comprehensive, streamlined, leverage, utilize. They say nothing.
+
+---
+
+### Complete bad → better reference
+
+| Feature description | Bad headline | Good headline |
+|---|---|---|
+| "Task management with priorities" | "Advanced task management" | `"Done by noon.\nEvery day."` |
+| "Syncs across devices" | "Cross-device sync" | `"Your phone.\nYour tablet.\nOne list."` |
+| "Analytics dashboard" | "Powerful analytics" | `"See what's\nactually working."` |
+| "Push notifications" | "Real-time notifications" | `"Never miss\nwhat matters."` |
+| "Home screen widget" | "Customizable widgets" | `"Your info.\nRight there."` |
+| "Offline mode" | "Works offline" | `"No signal?\nNo problem."` |
+| "Font size control" | "Accessibility features" | `"Bigger text.\nClearer words."` |
+| "Save favourites" | "Bookmark system" | `"Your prayers.\nAlways close."` |
+| "Dark mode" | "Dark mode support" | `"Easier on\nyour eyes."` |
+| "Language switch" | "Bilingual support" | `"Hindi or English.\nYou choose."` |
+
+---
+
+### Feature graphic headline
+
+Same rules, slightly longer — up to 8 words since the landscape canvas has more room. Should capture the app's core promise in a single line. No line breaks needed.
+
+> `"The app that changes how you pray"` ✓
+> `"Every devotional. One beautiful app."` ✓
+> `"Your daily devotional companion"` ✓
 
 ---
 

@@ -10,83 +10,118 @@ Unlike the Apple App Store, Play Store also requires a **Feature Graphic** (1024
 
 ## Discovery Phase
 
-Only **one question** needs to be asked. Everything else is derived from the assets automatically.
-
-### The only required question
-
-> "What are your top 3–6 features? For each, briefly describe what problem it solves for your users."
-
-This is a marketing decision — it cannot be derived from screenshots or code. The user knows their app's value proposition. Ask this first, before looking at anything else.
-
-If the user gives feature names without problems (e.g. "offline mode, dark theme, favourites"), follow up:
-
-> "For each one — what would frustrate a user if that feature didn't exist?"
-
-That answer is what you will write the headline from.
+The goal is to start generating as fast as possible without making wrong assumptions that waste the user's time. The approach: **ask what you must, derive what you can, always show your work and confirm before proceeding.**
 
 ---
 
-### Everything else: auto-derive
+### Step 1 — Ask first, look second
 
-Once the user has answered the features question, derive all remaining inputs without asking:
+Before looking at any files, ask the one question that cannot be derived:
 
-**Screenshot paths** — Scan the current directory (and one level of subdirectories) for `.png` and `.jpg` files. List what you find and confirm with the user. Do not ask them to type paths.
+> "What are your top 3–6 features? For each, briefly describe what problem it solves for your users."
 
-**App icon** — Check standard Android project paths first:
+This is a marketing decision — no file or screenshot can answer it. The user knows their app's value proposition.
+
+If the user gives feature names without the problem angle (e.g. "offline mode, dark theme, favourites"), follow up:
+
+> "For each one — what would a user find frustrating if that feature didn't exist?"
+
+Do not move to Step 2 until you have this.
+
+---
+
+### Step 2 — Scan and find assets
+
+Once you have the features, scan the current directory for assets. Look for:
+
+- **Screenshots**: `.png` / `.jpg` files in the current folder or a `screenshots/` subfolder
+- **App icon**: check standard Android paths first:
+  ```
+  app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+  app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+  ```
+  If not an Android project, look for any file named `icon*.png`, `logo*.png`, or `app-icon.*`
+
+If you **find exactly what you need** — list the files and say:
+> "I found these screenshots: [list]. I'll use these. Is that correct?"
+
+If you **find multiple candidates and can't tell which is right** — show them and ask:
+> "I found several PNG files. Which ones are the app screenshots to use?"
+
+If you **find nothing** — ask directly:
+> "I couldn't find any screenshots in this directory. Where are your Android app screenshots saved?"
+
+Never guess silently when there is ambiguity. One wrong file wastes the entire run.
+
+---
+
+### Step 3 — Derive visual settings from the screenshots
+
+Once you have the screenshots, analyze them visually and derive the following. **Present your findings as a short confirmation block before writing any code:**
+
 ```
-app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
-app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+Here's what I picked up from your screenshots — let me know if anything looks off:
+
+  App name:    Aarti Mandir
+  Primary:     #C9822A  (toolbar orange)
+  Background:  #FFF8F0  (warm cream)
+  Text:        #2D1A00  (dark brown)
+  Accent:      #C9822A
+  Theme:       editorial  (warm/earthy tones)
+  Font:        Inter  (default — let me know if you use a specific font)
+  Frame:       white  (light app)
+  Slides:      5
 ```
-If not an Android project, look for any file named `icon*.png` or `logo*.png` in the current directory.
 
-**Brand colors** — Visually analyze the provided screenshots:
-- **Primary**: dominant UI color — usually the toolbar, header, or button color
-- **Background**: the color behind most content (white, cream, black, etc.)
-- **Text**: infer from background — dark bg → `#FFFFFF`, light bg → `#111111`
-- **Accent**: CTA buttons, highlights, active states
-- **Secondary**: gradient partner — slightly shift primary hue by 15–20 degrees
+Only proceed once the user confirms or corrects this. A 10-second confirmation here prevents regenerating everything because a color was wrong.
 
-State your derived colors and let the user correct any that are wrong.
+**How to derive each value:**
 
-**Theme** — Infer from the screenshot background color:
-- White or light gray background → `"clean-light"`
-- Near-black or dark background → `"dark-bold"`
-- Warm beige / cream / earthy tones → `"editorial"`
-- The app's primary brand color fills the background → `"vibrant"`
+| Value | How to derive |
+|---|---|
+| App name | Read it from the screenshots (toolbar, splash screen, icon label) |
+| Primary color | Dominant UI color — toolbar, header, active tab, filled buttons |
+| Background color | Color behind most of the screen content |
+| Text color | Infer from background — dark bg → `#FFFFFF`, light bg → `#111111` |
+| Accent color | CTA buttons, highlights, toggles, active states |
+| Secondary color | Gradient partner — shift primary hue 15–20 degrees, or use a visible secondary UI color |
+| Theme | Dark bg → `dark-bold` · light/white bg → `clean-light` · warm/earthy bg → `editorial` · brand color fills bg → `vibrant` |
+| Font | Default **Inter** unless app screenshots show a clearly distinctive typeface |
+| Frame color | Dark app (dark toolbar + bg) → `black` · light app → `white` |
+| Slide count | Default **5** |
 
-**Device frame color** — Match the app's tone:
-- Dark app (dark toolbar, dark backgrounds) → `"black"` frame
-- Light app (white/light backgrounds) → `"white"` frame
+**If you genuinely cannot determine a value from the screenshots** — ask. Do not guess.
 
-**Typography** — Default to **Inter**. Do not ask. Only change if the user volunteers a font preference or the app visually uses a distinctive typeface.
+> "I can't clearly make out your primary brand color from the screenshots. What hex color is your main brand color?"
 
-**Slide count** — Default to **5 slides**. Do not ask. 5 is the optimal number — enough variety, not overwhelming to produce.
+---
 
-**Everything else** — Use these defaults silently:
-- `device.color`: derived above
+### Step 4 — Confirm, then build
+
+After the user confirms the summary in Step 3, proceed to generate `config.js` and `index.html`. Do not ask any more questions unless something unexpected comes up.
+
+**Silent defaults** (never ask about these unless the user raises them):
 - `tablet.enabled`: `false`
 - `locales`: `["en"]`
 - `featureGraphic.style`: `"gradient"`
 - `featureGraphic.subtext`: `"Available on Google Play"`
 
-Only ask about tablets, locales, or landscape if the user mentions them first.
-
 ---
 
-### Summary: what to ask vs. what to derive
+### What to ask vs. what to derive
 
-| Input | Action |
+| Input | Approach |
 |---|---|
-| Features + problems | **Ask** — the only required question |
-| Screenshot paths | Derive — scan directory, confirm |
-| App icon | Derive — check standard Android paths |
-| Brand colors | Derive — analyze screenshots visually |
-| Theme | Derive — infer from background color |
-| Font | Derive — default Inter |
-| Slide count | Derive — default 5 |
-| Device frame color | Derive — match app tone |
-| Feature graphic style | Derive — default gradient |
-| Tablet / locale / landscape | Derive — default off/en/portrait |
+| Features + user problems | **Always ask** — cannot be derived |
+| Screenshot paths | Scan → confirm if found, ask if not found or ambiguous |
+| App icon path | Scan standard paths → confirm if found, ask if not |
+| App name | Read from screenshots → confirm in summary |
+| Brand colors | Extract visually → confirm in summary, ask if unclear |
+| Theme | Infer from bg color → confirm in summary |
+| Font | Default Inter → confirm in summary, note if app uses something distinctive |
+| Device frame color | Infer from app tone → confirm in summary |
+| Slide count | Default 5 → state in summary, user can override |
+| Tablet / locale / landscape | Default off/en/portrait → never ask, only activate if user raises it |
 
 ---
 

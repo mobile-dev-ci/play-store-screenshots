@@ -110,13 +110,13 @@ const config = {
     },
     {
       id: "feature-one",
-      layout: "text-bottom",
+      layout: "text-top",
       screenshot: "screenshots/screen2.png",
       label: "FEATURE NAME",
       headline: "Short benefit\nstatement here.",
       subtext: "One supporting sentence, maximum.",
     },
-    // Add 2–8 slides total
+    // Add 2–8 slides total — all use layout: "text-top"
   ],
 
   featureGraphic: {
@@ -157,98 +157,51 @@ slides: [
 
 ---
 
-## Slide Layout Templates
+## Slide Layout
 
-### The golden rule: vertical stacking, large phone
+### One layout. Used consistently.
 
-A 1080×1920 canvas is tall and narrow. **Side-by-side horizontal layouts waste this space** — they shrink the phone to fit next to text, leaving large empty areas that look sparse and unprofessional.
-
-Always stack vertically. The phone should be **large and dominant**, occupying 60–70% of the canvas height. Text sits above or below it.
-
-**Default phone size for all layouts:** width = `PHONE_W * 0.82` (≈882px), maintaining the device aspect ratio (~1:2.15). This fills the canvas properly with room for a subtle drop shadow.
-
-Five named layouts. **Vary the layout across slides — never use the same layout twice in a row.**
-
----
-
-### `text-top` *(primary layout — use for most feature slides)*
-
-Text block in the top ~32% of the canvas. Phone large and centered below, slightly cropped at the bottom edge (creates depth and focuses attention on the top of the UI).
+Every phone slide uses the same composition: **text at the top, large phone below**. This is not a limitation — it is the correct pattern for portrait Play Store screenshots. It is what works.
 
 ```
 ┌─────────────────────┐
-│      LABEL          │
-│   Headline text     │  ← top 32% of canvas
-│   here              │
-│   Subtext line.     │
-│   ┌───────────────┐ │
-│   │               │ │
-│   │  [screenshot] │ │  ← phone: 82% canvas width, bottom-anchored
-│   │               │ │    slightly cropped at bottom
-│   │               │ │
-└───┴───────────────┴─┘
-```
-
-Sizing: phone `width = PHONE_W * 0.82`, centered horizontally, top edge starts at ~30% of canvas height.
-
----
-
-### `text-bottom` *(use for 1–2 slides per set)*
-
-Phone large and centered in the top ~65% of the canvas, slightly cropped at the top (status bar hidden). Text block in the bottom 35%.
-
-```
-┌───┬───────────────┬─┐
-│   │               │ │
-│   │  [screenshot] │ │  ← phone: 82% canvas width, top-anchored
-│   │               │ │    slightly cropped at top
-│   │               │ │
-│   └───────────────┘ │
-│      LABEL          │
-│   Headline text     │  ← bottom 35% of canvas
-│   Subtext line.     │
-└─────────────────────┘
-```
-
-Sizing: phone `width = PHONE_W * 0.82`, top edge at -3% of canvas (crops status bar), centered horizontally.
-
----
-
-### `split-screen` *(use for 1 slide per set — strong contrast)*
-
-Canvas divided horizontally at ~38%. Top panel: solid `brand.primary` background with label and headline in white. Bottom panel: canvas background color. Phone centered, overlapping the divider by ~8% of canvas height — creates visual tension and depth.
-
-```
-┌─────────────────────┐
-│ ■■■■■■■■■■■■■■■■■■■ │  ← brand.primary panel (top 38%)
-│ LABEL               │
-│ Headline here       │
-├──────────┬──────────┤
-│    ┌─────┴────┐     │
-│    │          │     │  ← phone overlaps divider, centered
-│    │[screenshot]    │     width = PHONE_W * 0.72
-│    │          │     │
-│    └──────────┘     │
-└─────────────────────┘
-```
-
----
-
-### `full-bleed` *(use maximum 1 per set)*
-
-App screenshot fills the entire canvas edge-to-edge with no phone frame. Short text overlay (label + 1-line headline only) at the top or bottom with a semi-transparent gradient scrim. Only use when the screenshot itself is visually rich enough to stand alone.
-
-```
-┌─────────────────────┐
-│ LABEL               │  ← scrim overlay, top 20%
-│ Headline            │
+│   App Name          │  ← small, top padding ~6% of canvas height
 │                     │
-│  [full screenshot   │
-│   fills canvas      │
-│   edge to edge]     │
+│   LABEL             │  ← all-caps label
+│   Big headline      │  ← largest text on the slide
+│   here.             │
+│   Subtext sentence. │  ← optional, smaller
 │                     │
-└─────────────────────┘
+│  ┌───────────────┐  │
+│  │               │  │
+│  │  [screenshot] │  │  ← phone, large, centered
+│  │               │  │
+│  │               │  │  ← bottom of phone crops off canvas (intentional)
+└──┴───────────────┴──┘
 ```
+
+**Standard phone sizing — use these exact values:**
+
+| Property | Value |
+|---|---|
+| Phone width | `PHONE_W * 0.78` (≈843px) |
+| Phone height | `phoneWidth * 2.16` (≈1821px — taller than canvas) |
+| Phone left | `(PHONE_W - phoneWidth) / 2` (centered) |
+| Phone top | `PHONE_H * 0.30` (≈576px from top) |
+| Bottom crop | ~25% of phone height clips off canvas — intentional, adds depth |
+
+The phone bottom extending past the canvas edge is intentional and desirable — it grounds the phone visually and removes the awkward empty space that appears when the whole frame is visible.
+
+**Text block positioning:**
+
+| Element | Position |
+|---|---|
+| App name / brand | `top: PHONE_H * 0.06`, centered |
+| Label | `top: PHONE_H * 0.13`, centered |
+| Headline | Below label, centered, `font-size: PHONE_W * 0.09` |
+| Subtext | Below headline, centered, `font-size: PHONE_W * 0.038` |
+
+Keep the entire text block within the top 28% of canvas height. If the text runs long, shorten the headline — do not push the phone lower.
 
 ---
 
@@ -263,9 +216,13 @@ Background fills the full canvas using the chosen `featureGraphic.style`.
 
 ---
 
-### What happened to `hero-left` / `hero-right`?
+### What not to use
 
-Side-by-side horizontal layouts (text left, phone right or vice versa) consistently produce poor results on portrait canvases — the phone is forced small to fit beside text, and large empty areas appear above and below. **Do not implement these layouts.** Use `text-top` or `text-bottom` instead, which achieve layout variety while keeping the phone large.
+**`text-bottom`** — text below the phone — consistently looks worse. The phone floats awkwardly at the top and the text block at the bottom feels disconnected.
+
+**`split-screen`** — colored panel + phone — the panel dominates and the phone ends up small. Do not use.
+
+**`hero-left` / `hero-right`** — side-by-side horizontal — leaves large dead areas on a portrait canvas. Do not use.
 
 ---
 
@@ -280,29 +237,29 @@ Props: `screenshot` (string path), `color` ("black" | "white" | "silver"), `widt
 Rendered structure and key proportions (all values derived from component `width` / `height`):
 
 ```
-┌──────────────────────┐  outer frame
-│  ●                   │  punch-hole camera: width*0.028 diameter, centered, top height*0.018
-│ ┌──────────────────┐ │  screen: left/right inset width*0.03, top/bottom inset height*0.025
-│ │                  │ │
-│ │   [screenshot]   │ │
-│ │                  │ │
-│ └──────────────────┘ │
-│       ───────        │  home indicator: width*0.30 wide, height*0.003 tall, bottom height*0.015
+┌──────────────────────┐  outer frame (corner radius: width*0.09 — refined, not bulky)
+│          ●           │  punch-hole camera: width*0.026 diameter, centered, top height*0.016
+│  ┌────────────────┐  │  screen: left/right inset width*0.025, top/bottom inset height*0.022
+│  │                │  │
+│  │  [screenshot]  │  │
+│  │                │  │
+│  └────────────────┘  │
+│        ───────       │  home indicator: width*0.28 wide, height*0.003 tall, bottom height*0.014
 └──────────────────────┘
 ```
 
 | Property | Value |
 |---|---|
-| Outer corner radius | `width * 0.12` |
-| Frame border thickness | `width * 0.008` |
-| Screen left/right inset | `width * 0.030` |
-| Screen top inset | `height * 0.025` |
-| Screen bottom inset | `height * 0.028` |
-| Camera diameter | `width * 0.028` |
-| Camera center from top | `height * 0.018` |
-| Home indicator width | `width * 0.30` |
+| Outer corner radius | `width * 0.09` |
+| Frame border thickness | `width * 0.005` |
+| Screen left/right inset | `width * 0.025` |
+| Screen top inset | `height * 0.022` |
+| Screen bottom inset | `height * 0.024` |
+| Camera diameter | `width * 0.026` |
+| Camera center from top | `height * 0.016` |
+| Home indicator width | `width * 0.28` |
 | Home indicator height | `height * 0.003` |
-| Home indicator from bottom | `height * 0.015` |
+| Home indicator from bottom | `height * 0.014` |
 
 Frame colors by `color` prop:
 - `"black"` → frame `#1C1C1E`, border `#3A3A3C`, screen background `#000000`

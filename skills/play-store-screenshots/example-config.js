@@ -3,7 +3,7 @@
  * Copy this to config.js in your generated project and modify it.
  *
  * This example shows:
- *  - 5 phone slides using text-top, text-bottom, and split-screen layouts
+ *  - 5 phone slides all using the standard text-top layout
  *  - Feature graphic using the gradient style
  *  - Dark theme
  *  - Single locale (English)
@@ -50,7 +50,7 @@ const config = {
     },
     {
       id: "stats",
-      layout: "text-bottom",
+      layout: "text-top",
       screenshot: "screenshots/screen-stats.png",
       label: "WEEKLY INSIGHTS",
       headline: "See what's\nactually working.",
@@ -58,7 +58,7 @@ const config = {
     },
     {
       id: "block",
-      layout: "split-screen",
+      layout: "text-top",
       screenshot: "screenshots/screen-block.png",
       label: "DISTRACTION BLOCKING",
       headline: "The apps\ncan wait.",
@@ -66,7 +66,7 @@ const config = {
     },
     {
       id: "widgets",
-      layout: "text-bottom",
+      layout: "text-top",
       screenshot: "screenshots/screen-widget.png",
       label: "HOME SCREEN WIDGETS",
       headline: "Your streak.\nRight there.",

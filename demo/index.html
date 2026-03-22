@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Play Store Screenshots — Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px;
+  }
+
+  .showcase {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
+
+  /* Each slide is 1080x1920 rendered at 0.3 scale = 324x576 */
+  .slide-wrap {
+    width: 324px;
+    height: 576px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+    flex-shrink: 0;
+  }
+
+  .slide {
+    width: 1080px;
+    height: 1920px;
+    transform: scale(0.3);
+    transform-origin: top left;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── SLIDE BACKGROUNDS ── */
+  .slide-1 { background: #FAF6F0; }
+  .slide-2 { background: #0A0A0A; }
+  .slide-3 { background: #FAF6F0; }
+
+  /* ── TEXT BLOCK ── */
+  .text-block {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding-top: 115px;
+    text-align: center;
+    z-index: 10;
+  }
+
+  .label {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .headline {
+    font-size: 108px;
+    font-weight: 800;
+    line-height: 1.05;
+    margin-bottom: 36px;
+    white-space: pre-line;
+  }
+
+  .subtext {
+    font-size: 42px;
+    font-weight: 400;
+    line-height: 1.4;
+    opacity: 0.7;
+    padding: 0 80px;
+  }
+
+  /* Slide 1 — warm light */
+  .slide-1 .label   { color: #C9822A; }
+  .slide-1 .headline { color: #2D1800; }
+  .slide-1 .subtext  { color: #2D1800; }
+
+  /* Slide 2 — dark bold */
+  .slide-2 .label   { color: #7C3AED; }
+  .slide-2 .headline { color: #FFFFFF; }
+  .slide-2 .subtext  { color: rgba(255,255,255,0.65); }
+
+  /* Slide 3 — warm light */
+  .slide-3 .label   { color: #C9822A; }
+  .slide-3 .headline { color: #2D1800; }
+  .slide-3 .subtext  { color: #2D1800; }
+
+  /* ── PHONE FRAME ── */
+  .phone-wrap {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 576px; /* PHONE_H * 0.30 */
+    z-index: 5;
+  }
+
+  .phone {
+    position: relative;
+    width: 843px; /* PHONE_W * 0.78 */
+    height: 1821px; /* 843 * 2.16 */
+    background: #1C1C1E;
+    border-radius: 76px; /* 843 * 0.09 */
+    border: 4px solid #3A3A3C; /* 843 * 0.005 */
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.06),
+      0 32px 100px rgba(0,0,0,0.35),
+      0 12px 32px rgba(0,0,0,0.20);
+    overflow: hidden;
+  }
+
+  /* white frame variant */
+  .phone.light {
+    background: #E8E8ED;
+    border-color: #C8C8CE;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.06),
+      0 32px 100px rgba(0,0,0,0.18),
+      0 12px 32px rgba(0,0,0,0.10);
+  }
+
+  .phone-screen {
+    position: absolute;
+    top: 40px;  /* 1821 * 0.022 */
+    left: 21px; /* 843 * 0.025 */
+    right: 21px;
+    bottom: 44px; /* 1821 * 0.024 */
+    border-radius: 58px;
+    overflow: hidden;
+  }
+
+  /* punch-hole camera */
+  .phone::before {
+    content: '';
+    position: absolute;
+    top: 29px; /* 1821 * 0.016 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 22px; /* 843 * 0.026 */
+    height: 22px;
+    background: #0a0a0a;
+    border-radius: 50%;
+    z-index: 20;
+  }
+  .phone.light::before { background: #C8C8CE; }
+
+  /* home indicator */
+  .phone::after {
+    content: '';
+    position: absolute;
+    bottom: 25px; /* 1821 * 0.014 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 236px; /* 843 * 0.28 */
+    height: 5px;  /* 1821 * 0.003 */
+    background: rgba(255,255,255,0.25);
+    border-radius: 3px;
+    z-index: 20;
+  }
+  .phone.light::after { background: rgba(0,0,0,0.18); }
+
+  /* ────────────────────────────────────────
+     SLIDE 1 — App screen: Home / prayer list
+  ──────────────────────────────────────── */
+  .screen-1 {
+    background: #FFF8F0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .screen-1 .topbar {
+    background: #C9822A;
+    height: 120px;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 40px 20px;
+    gap: 20px;
+  }
+  .screen-1 .topbar-title {
+    color: white;
+    font-size: 44px;
+    font-weight: 700;
+    flex: 1;
+  }
+  .screen-1 .topbar-icon {
+    width: 52px; height: 52px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 24px; font-weight: 700;
+  }
+  .screen-1 .greeting {
+    text-align: center;
+    padding: 30px 0 10px;
+    font-size: 30px;
+    color: #C9822A;
+    opacity: 0.8;
+  }
+  .screen-1 .mantra-card {
+    margin: 0 36px 30px;
+    background: white;
+    border-radius: 20px;
+    border: 1.5px solid rgba(201,130,42,0.2);
+    padding: 30px;
+  }
+  .screen-1 .mantra-tag {
+    font-size: 22px;
+    color: #C9822A;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .screen-1 .mantra-text {
+    font-size: 34px;
+    font-weight: 700;
+    color: #2D1800;
+    text-align: center;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+  .screen-1 .mantra-sub {
+    font-size: 24px;
+    color: #888;
+    text-align: center;
+  }
+  .screen-1 .search {
+    margin: 0 36px 20px;
+    background: white;
+    border: 1.5px solid #E0D4C4;
+    border-radius: 50px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    gap: 16px;
+  }
+  .screen-1 .search-text { color: #bbb; font-size: 28px; }
+  .screen-1 .section-label {
+    padding: 0 36px 16px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #999;
+    text-transform: uppercase;
+  }
+  .screen-1 .fav-chip {
+    margin: 0 36px 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1.5px solid #E0D4C4;
+    border-radius: 50px;
+    padding: 14px 28px;
+    font-size: 26px;
+    color: #C9822A;
+    font-weight: 600;
+  }
+  .screen-1 .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 0 36px;
+  }
+  .screen-1 .grid-item {
+    border-radius: 16px;
+    overflow: hidden;
+    height: 220px;
+    position: relative;
+  }
+  .screen-1 .grid-item-bg {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: flex-end;
+    padding: 16px;
+  }
+  .screen-1 .grid-item-label {
+    font-size: 26px;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  /* ────────────────────────────────────────
+     SLIDE 2 — App screen: Focus timer (dark)
+  ──────────────────────────────────────── */
+  .screen-2 {
+    background: #0F0F1A;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .screen-2 .s2-topbar {
+    width: 100%;
+    background: #0F0F1A;
+    height: 110px;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 40px 20px;
+    justify-content: space-between;
+  }
+  .screen-2 .s2-topbar-title {
+    color: rgba(255,255,255,0.9);
+    font-size: 40px;
+    font-weight: 600;
+  }
+  .screen-2 .s2-topbar-icon {
+    width: 52px; height: 52px;
+    background: rgba(124,58,237,0.25);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .screen-2 .s2-mode-tabs {
+    display: flex;
+    gap: 0;
+    background: rgba(255,255,255,0.07);
+    border-radius: 50px;
+    padding: 8px;
+    margin: 40px 0 60px;
+  }
+  .screen-2 .s2-tab {
+    padding: 16px 52px;
+    border-radius: 40px;
+    font-size: 28px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+  }
+  .screen-2 .s2-tab.active {
+    background: #7C3AED;
+    color: white;
+  }
+  /* Timer ring */
+  .screen-2 .timer-ring {
+    width: 500px;
+    height: 500px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 60px;
+  }
+  .screen-2 .timer-ring svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    transform: rotate(-90deg);
+  }
+  .screen-2 .timer-ring .ring-bg {
+    fill: none;
+    stroke: rgba(255,255,255,0.06);
+    stroke-width: 16;
+  }
+  .screen-2 .timer-ring .ring-fill {
+    fill: none;
+    stroke: #7C3AED;
+    stroke-width: 16;
+    stroke-linecap: round;
+    stroke-dasharray: 1382;
+    stroke-dashoffset: 346; /* ~75% progress */
+  }
+  .screen-2 .timer-inner {
+    text-align: center;
+    z-index: 1;
+  }
+  .screen-2 .timer-time {
+    font-size: 96px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.02em;
+  }
+  .screen-2 .timer-label {
+    font-size: 28px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 8px;
+  }
+  .screen-2 .task-label {
+    font-size: 32px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 60px;
+  }
+  .screen-2 .play-btn {
+    width: 140px;
+    height: 140px;
+    background: #7C3AED;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 24px rgba(124,58,237,0.15);
+  }
+  .screen-2 .play-icon {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 30px 0 30px 52px;
+    border-color: transparent transparent transparent white;
+    margin-left: 10px;
+  }
+
+  /* ────────────────────────────────────────
+     SLIDE 3 — App screen: Stats
+  ──────────────────────────────────────── */
+  .screen-3 {
+    background: #FFF8F0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .screen-3 .s3-topbar {
+    background: #C9822A;
+    height: 120px;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 40px 20px;
+  }
+  .screen-3 .s3-topbar-title {
+    color: white;
+    font-size: 44px;
+    font-weight: 700;
+  }
+  .screen-3 .s3-card {
+    margin: 36px 36px 0;
+    background: white;
+    border-radius: 24px;
+    border: 1.5px solid rgba(201,130,42,0.15);
+    padding: 36px;
+    margin-bottom: 24px;
+  }
+  .screen-3 .s3-card-title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 28px;
+  }
+  .screen-3 .s3-stat-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .screen-3 .s3-stat {
+    flex: 1;
+    background: #FFF8F0;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+  }
+  .screen-3 .s3-stat-num {
+    font-size: 52px;
+    font-weight: 800;
+    color: #C9822A;
+  }
+  .screen-3 .s3-stat-label {
+    font-size: 22px;
+    color: #888;
+    margin-top: 4px;
+  }
+  .screen-3 .s3-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    height: 200px;
+    padding-top: 20px;
+  }
+  .screen-3 .s3-bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    justify-content: flex-end;
+  }
+  .screen-3 .s3-bar {
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+  }
+  .screen-3 .s3-bar-day {
+    font-size: 20px;
+    color: #bbb;
+  }
+  .screen-3 .s3-streak {
+    margin: 0 36px;
+    background: white;
+    border-radius: 24px;
+    border: 1.5px solid rgba(201,130,42,0.15);
+    padding: 32px 36px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .screen-3 .s3-streak-icon {
+    font-size: 60px;
+  }
+  .screen-3 .s3-streak-text { flex: 1; }
+  .screen-3 .s3-streak-num {
+    font-size: 40px;
+    font-weight: 800;
+    color: #C9822A;
+  }
+  .screen-3 .s3-streak-label {
+    font-size: 26px;
+    color: #888;
+  }
+</style>
+</head>
+<body>
+<div class="showcase" id="showcase">
+
+  <!-- ── SLIDE 1: Hero ── -->
+  <div class="slide-wrap">
+    <div class="slide slide-1" id="slide-1">
+      <div class="text-block">
+        <div class="label">AARTI MANDIR</div>
+        <div class="headline">Every prayer.
+At your fingertips.</div>
+        <div class="subtext">Aarti · Chalisa · Mantra — all in one place</div>
+      </div>
+      <div class="phone-wrap">
+        <div class="phone light">
+          <div class="phone-screen">
+            <div class="screen-1">
+              <div class="topbar">
+                <div class="topbar-title">Aarti Mandir</div>
+                <div class="topbar-icon">A</div>
+                <div class="topbar-icon">ह</div>
+              </div>
+              <div class="greeting">🙏 Good Evening</div>
+              <div class="mantra-card">
+                <div class="mantra-tag">🕉 Mantra of the Day</div>
+                <div class="mantra-text">ॐ नमो नारायणाय</div>
+                <div class="mantra-sub">Om Namo Narayanaya</div>
+              </div>
+              <div class="search">
+                <span style="color:#C9822A;font-size:28px;">🔍</span>
+                <span class="search-text">Search aartis...</span>
+              </div>
+              <div class="section-label">Favourites</div>
+              <div class="fav-chip">❤ Aarti Hanumanji</div>
+              <div class="section-label">All Aartis</div>
+              <div class="grid">
+                <div class="grid-item">
+                  <div class="grid-item-bg" style="background: linear-gradient(160deg,#e8a445,#c9822a);">
+                    <span class="grid-item-label">Aarti Jai Ganesh</span>
+                  </div>
+                </div>
+                <div class="grid-item">
+                  <div class="grid-item-bg" style="background: linear-gradient(160deg,#5b9bd5,#2d6fa3);">
+                    <span class="grid-item-label">Aarti Om Jai Jagdish</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 2: Focus Timer (dark) ── -->
+  <div class="slide-wrap">
+    <div class="slide slide-2" id="slide-2">
+      <div class="text-block">
+        <div class="label">FOCUS SESSION</div>
+        <div class="headline">Deep work.
+No distractions.</div>
+        <div class="subtext">25-minute sessions built around how your brain works.</div>
+      </div>
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="screen-2">
+              <div class="s2-topbar">
+                <span class="s2-topbar-title">Focus</span>
+                <div class="s2-topbar-icon">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9" stroke="#7C3AED" stroke-width="2"/>
+                    <path d="M12 7v5l3 3" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="s2-mode-tabs">
+                <div class="s2-tab active">Focus</div>
+                <div class="s2-tab">Break</div>
+                <div class="s2-tab">Long</div>
+              </div>
+              <div class="timer-ring">
+                <svg viewBox="0 0 500 500">
+                  <circle class="ring-bg" cx="250" cy="250" r="220"/>
+                  <circle class="ring-fill" cx="250" cy="250" r="220"/>
+                </svg>
+                <div class="timer-inner">
+                  <div class="timer-time">18:43</div>
+                  <div class="timer-label">remaining</div>
+                </div>
+              </div>
+              <div class="task-label">Design review · Session 2 of 4</div>
+              <div class="play-btn">
+                <div class="play-icon"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 3: Stats ── -->
+  <div class="slide-wrap">
+    <div class="slide slide-3" id="slide-3">
+      <div class="text-block">
+        <div class="label">WEEKLY INSIGHTS</div>
+        <div class="headline">See what's
+actually working.</div>
+        <div class="subtext">Spot your most productive hours and focus streaks.</div>
+      </div>
+      <div class="phone-wrap">
+        <div class="phone light">
+          <div class="phone-screen">
+            <div class="screen-3">
+              <div class="s3-topbar">
+                <span class="s3-topbar-title">Your Stats</span>
+              </div>
+              <div class="s3-card">
+                <div class="s3-card-title">This Week</div>
+                <div class="s3-stat-row">
+                  <div class="s3-stat">
+                    <div class="s3-stat-num">14.2h</div>
+                    <div class="s3-stat-label">focused</div>
+                  </div>
+                  <div class="s3-stat">
+                    <div class="s3-stat-num">38</div>
+                    <div class="s3-stat-label">sessions</div>
+                  </div>
+                  <div class="s3-stat">
+                    <div class="s3-stat-num">91%</div>
+                    <div class="s3-stat-label">completed</div>
+                  </div>
+                </div>
+                <div class="s3-bars">
+                  <div class="s3-bar-col"><div class="s3-bar" style="height:55%;background:#E8D5C0;"></div><div class="s3-bar-day">M</div></div>
+                  <div class="s3-bar-col"><div class="s3-bar" style="height:80%;background:#C9822A;"></div><div class="s3-bar-day">T</div></div>
+                  <div class="s3-bar-col"><div class="s3-bar" style="height:45%;background:#E8D5C0;"></div><div class="s3-bar-day">W</div></div>
+                  <div class="s3-bar-col"><div class="s3-bar" style="height:95%;background:#C9822A;"></div><div class="s3-bar-day">T</div></div>
+                  <div class="s3-bar-col"><div class="s3-bar" style="height:70%;background:#C9822A;"></div><div class="s3-bar-day">F</div></div>
+                  <div class="s3-bar-col"><div class="s3-bar" style="height:30%;background:#E8D5C0;"></div><div class="s3-bar-day">S</div></div>
+                  <div class="s3-bar-col"><div class="s3-bar" style="height:20%;background:#E8D5C0;"></div><div class="s3-bar-day">S</div></div>
+                </div>
+              </div>
+              <div class="s3-streak">
+                <div class="s3-streak-icon">🔥</div>
+                <div class="s3-streak-text">
+                  <div class="s3-streak-num">12-day streak</div>
+                  <div class="s3-streak-label">Keep it going!</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

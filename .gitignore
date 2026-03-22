@@ -12,8 +12,10 @@
 *.swp
 *.swo
 
-# Node (for generated Next.js projects)
+# Node
 node_modules/
+package.json
+package-lock.json
 .next/
 out/
 

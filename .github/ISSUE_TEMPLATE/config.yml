@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: Question or general discussion
+    url: https://github.com/mobile-dev-ci/play-store-screenshots/discussions
+    about: Ask a question, share what you built, or discuss ideas before opening an issue.

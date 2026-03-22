@@ -1,24 +1,49 @@
 ---
 name: Bug report
-about: Something the skill does incorrectly or inconsistently
-title: ''
+about: The skill generated something wrong, incomplete, or inconsistent
+title: '[Bug] '
 labels: bug
 assignees: ''
 ---
 
-**What happened?**
-A clear description of what the skill did wrong.
+## What went wrong?
 
-**What did you expect?**
-What the correct behavior should be.
+<!-- A clear description of what the skill did incorrectly. -->
 
-**Steps to reproduce**
-1. What you asked the AI agent
-2. What it generated
-3. Where it went wrong
+## What did you expect instead?
 
-**AI assistant used**
-e.g. Claude Code, Cursor, Windsurf
+<!-- What the correct output or behavior should have been. -->
 
-**Additional context**
-Screenshots, exported PNGs, or the generated `screenshots.config.ts` if relevant.
+## How to reproduce
+
+**Prompt you gave the AI:**
+```
+<!-- Paste the exact message you sent to your AI assistant -->
+```
+
+**What the agent generated** (attach or paste your `config.js`):
+```js
+<!-- Paste the generated config.js here if relevant -->
+```
+
+**Steps:**
+1.
+2.
+3.
+
+## Output
+
+<!-- Attach screenshots of the bad output if it's a visual issue. -->
+
+## Environment
+
+| Field | Value |
+|---|---|
+| AI assistant | <!-- Claude Code / Cursor / Windsurf / other --> |
+| Model | <!-- e.g. claude-sonnet-4-6, GPT-4o --> |
+| OS | <!-- macOS / Windows / Linux --> |
+| Browser used for export | <!-- Chrome / Safari / Firefox --> |
+
+## Additional context
+
+<!-- Anything else that might help — Play Store error messages, the exported PNG, etc. -->

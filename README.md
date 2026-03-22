@@ -1,108 +1,128 @@
 # Play Store Screenshots Generator
 
-An AI-powered skill that generates production-ready **Google Play Store screenshots** for Android apps — designed for Claude Code, Cursor, Windsurf, and other AI coding assistants.
+**Your app deserves better than emulator screenshots.**
 
-> Screenshots are advertisements, not documentation. This skill builds a Next.js project that exports marketing-focused slides and a Feature Graphic at all required Play Store dimensions.
+Most Android developers ship with raw device captures slapped directly onto Play Store. No context. No copy. No design. Meanwhile the apps ranking above them look like they hired a marketing team.
+
+This skill closes that gap — give your AI assistant one prompt and get production-ready, marketing-focused Play Store screenshots in minutes.
 
 ---
 
-## What it generates
+<!-- Add a screenshot of example output here -->
 
-| Asset | Dimensions | Required |
+---
+
+## How it works
+
+You answer one question. The AI does the rest.
+
+> *"What are your top features, and what problem does each solve for your users?"*
+
+From there the agent scans your project, extracts your brand colors directly from your screenshots, writes catchy headlines for each feature, and generates a complete set of polished slides — plus the Feature Graphic Play Store requires.
+
+No design tools. No manual color picking. No copywriting from scratch.
+
+```
+You                          AI
+─────────────────────────────────────────────────────
+Answer 1 question       →    Scans your screenshots
+                        →    Extracts brand colors
+                        →    Writes headline + subtext per feature
+                        →    Builds index.html + config.js
+                        →    Generates 5 slides + Feature Graphic
+Open browser            →
+Click Export All        →    Downloads production PNGs
+Upload to Play Console  →
+```
+
+---
+
+## What gets generated
+
+| Asset | Dimensions | Notes |
 |---|---|---|
-| Phone screenshots | 1080 × 1920px | Yes (2–8 slides) |
-| Feature Graphic | 1024 × 500px | Yes |
-| Tablet screenshots | 1200×1920 / 1600×2560px | No |
-| Localized sets | per-language exports | No |
+| Phone screenshots | 1080 × 1920px | 2–8 slides, text-top layout |
+| Feature Graphic | 1024 × 500px | Required by Play Store |
+| Tablet screenshots | 1200×1920 / 1600×2560px | Optional |
+| Localized sets | Per-language exports | Optional, RTL-aware |
 
 ---
 
-## Prerequisites
+## Zero setup. Two files.
 
-- An AI assistant with skills support: [Claude Code](https://claude.ai/code), [Cursor](https://cursor.sh), or [Windsurf](https://windsurf.ai)
-- Android screenshots from your device or emulator (taken beforehand)
-- Python 3 or Node.js — only to run a one-line local server
+No npm. No framework. No `node_modules`. The entire generator is two files:
+
+```
+play-store-screenshots/
+├── index.html    ← rendering engine + export logic
+└── config.js     ← your copy, colors, slides (AI fills this in)
+```
+
+To preview, run one command and open Chrome:
+
+```bash
+python3 -m http.server 8080
+```
+
+That's it.
 
 ---
 
-## Installation
+## Get started
 
-**Via `npx skills`** (recommended):
+**Install the skill:**
 
 ```bash
 npx skills add mobile-dev-ci/play-store-screenshots
 ```
 
-**Manually:**
+**Then tell your AI assistant:**
 
-```bash
-git clone https://github.com/mobile-dev-ci/play-store-screenshots
-cp -r play-store-screenshots/skills/play-store-screenshots ~/.claude/skills/
+```
+Generate Play Store screenshots for my Android app
+using the play-store-screenshots skill.
 ```
 
-> `npx skills` is a CLI tool for installing AI assistant skills from GitHub. It copies the skill files to your local skills directory so your AI agent can reference them.
+Works with [Claude Code](https://claude.ai/code), [Cursor](https://cursor.sh), [Windsurf](https://windsurf.ai), and any AI assistant with skills support.
+
+> **What is `npx skills`?** A CLI tool for installing AI assistant skills from GitHub. It copies the skill into your local `~/.claude/skills/` directory so your agent can reference it.
+>
+> **Prefer to install manually?**
+> ```bash
+> git clone https://github.com/mobile-dev-ci/play-store-screenshots
+> cp -r play-store-screenshots/skills/play-store-screenshots ~/.claude/skills/
+> ```
 
 ---
 
-## Usage
+## What makes this different
 
-Once installed, open your AI assistant in the folder where you want the project created and say:
+**Headlines written around your features, not feature names.**
+The AI asks what problem each feature solves — not just what it does. "Bigger text. Clearer words." lands harder than "Font size setting."
 
-> "Generate Play Store screenshots for my Android app using the play-store-screenshots skill."
+**Colors extracted from your screenshots.**
+No manual hex picking. The AI reads your toolbar color, background, and accent from the screenshots you provide and builds the whole palette.
 
-The agent will walk you through the rest.
+**One layout, done right.**
+Text at the top, large phone below, bottom naturally cropped for depth. Every slide. The pattern that consistently produces clean, store-ready output.
 
-### What the agent does
+**Feature Graphic as a first-class asset.**
+Play Store requires a 1024×500 landscape banner that most tools ignore. This skill generates it properly alongside your slides.
 
-1. **Asks** for your app screenshots, icon, brand colors, and top features
-2. **Creates** two files: `index.html` (rendering engine) and `config.js` (your content)
-3. **Designs** 2–8 phone slides + a Feature Graphic — no framework, no install step
-
-### What you do
-
-1. Provide your raw Android screenshots (from device or emulator)
-2. Answer the agent's questions about brand and features
-3. Run a one-line local server and open Chrome:
-   ```bash
-   python3 -m http.server 8080   # or: npx serve .
-   ```
-4. Click **Export All** — files download to your Downloads folder
-5. Upload to [Google Play Console](https://play.google.com/console)
+**CSS-only Android mockup.**
+No PNG device frame that goes stale. Pure CSS with correct proportions, punch-hole camera, and side buttons. Matches black, white, or silver.
 
 ---
 
-## Key features
+## Inspired by
 
-**No framework, no install** — Just two files: `index.html` and `config.js`. Open with a one-line local server. No npm, no build step, no 300MB of node_modules.
-
-**Config-driven architecture** — All copy, colors, and slide definitions live in `config.js`. The layout engine reads from it. Changing a headline never touches layout code. See [`example-config.js`](skills/play-store-screenshots/example-config.js) for a complete working example.
-
-**CSS-only Android mockup** — No PNG asset required for the phone frame. Pure CSS with correct proportions, punch-hole camera, and side buttons. Works in black, white, or silver.
-
-**Feature Graphic as first-class** — Play Store's required 1024×500 landscape banner is a full slide type with its own templates (gradient, solid, screenshot-backed) — not an afterthought.
-
-**Six layout templates** — Named compositions (`hero-center`, `hero-left`, `hero-right`, `split-screen`, `full-bleed`, `feature-graphic`) give every run consistent, polished output.
-
-**Overview route** — `/overview` renders all slides in a grid at reduced scale. Review narrative arc and layout variety before exporting.
-
-**Play Store QA checklist** — Platform-specific validation built into the skill: minimum 2 screenshots, feature graphic at exact dimensions, no iOS UI elements, opaque backgrounds, files under 8MB.
-
----
-
-## Tech stack
-
-- Plain HTML + vanilla JS — no framework, no install step
-- [html-to-image](https://github.com/bubkoo/html-to-image) — PNG export (loaded via CDN)
-- Google Fonts — loaded via `<link>` tag
+[app-store-screenshots](https://github.com/ParthJadhav/app-store-screenshots) by [@ParthJadhav](https://github.com/ParthJadhav) — the iOS version of this skill.
 
 ---
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
----
-
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

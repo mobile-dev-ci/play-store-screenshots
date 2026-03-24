@@ -379,6 +379,170 @@ Side buttons (optional detail, improves realism):
 
 ---
 
+## Premium Design Elements
+
+The difference between a basic screenshot and a premium-looking one is entirely in the decorative layer — background treatment, label design, and subtle depth behind the phone. All of these are pure CSS applied to the slide canvas.
+
+### Background treatments
+
+Never use a flat solid fill for the slide background. Layer at least two elements:
+
+1. **Base gradient** — diagonal or radial, multi-stop, using brand colors
+2. **Decorative orbs** — 2–3 large, heavily blurred circles placed behind the text and phone
+
+```css
+/* Example: dark theme with purple brand */
+.slide {
+  background: linear-gradient(160deg, #080613 0%, #120B22 60%, #060410 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Blurred decorative orb */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Top orb — sits behind the text block */
+.orb-top {
+  width: 700px; height: 700px;
+  top: -120px; left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, #7C3AED 0%, transparent 70%);
+  opacity: 0.28;
+}
+
+/* Bottom orb — sits behind the phone */
+.orb-bottom {
+  width: 900px; height: 900px;
+  top: 500px; left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, #4338CA 0%, transparent 70%);
+  opacity: 0.20;
+}
+```
+
+Adjust orb opacity by theme:
+- Dark themes: `0.25–0.40`
+- Light themes: `0.08–0.15` (very soft tinted wash, barely visible)
+
+### Label as pill badge
+
+The label must be a pill-shaped badge with a background — not plain text. This single change makes slides look designed rather than assembled.
+
+```css
+.label-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 32px;
+  border-radius: 100px;
+  font-size: 28px;        /* PHONE_W * 0.026 */
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+/* Dark theme — glass/translucent variant */
+.label-pill-glass {
+  background: rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.80);
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+}
+
+/* Dark theme — colored variant (hero slide or high-emphasis labels) */
+.label-pill-accent {
+  background: rgba(124, 58, 237, 0.18);   /* use brand primary at ~18% */
+  color: #C4B5FD;                          /* lighter tint of primary */
+  border: 1.5px solid rgba(124, 58, 237, 0.32);
+}
+
+/* Light theme */
+.label-pill-light {
+  background: rgba(201, 130, 42, 0.12);   /* brand primary at ~12% */
+  color: #92600E;                          /* darker shade for contrast */
+  border: 1.5px solid rgba(201, 130, 42, 0.25);
+}
+```
+
+### Headline typography
+
+Apply tight letter-spacing and a subtle text shadow for depth:
+
+```css
+.headline {
+  font-size: 108px;       /* PHONE_W * 0.10 */
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  white-space: pre-line;
+}
+
+/* Dark theme only */
+.slide-dark .headline {
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.40);
+}
+```
+
+### App icon in header
+
+Show the app icon above the label (≈80px, rounded). This anchors brand identity on every slide without adding clutter.
+
+```css
+.app-icon {
+  width: 80px; height: 80px;
+  border-radius: 18px;
+  object-fit: cover;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.30);
+  margin-bottom: 20px;
+}
+```
+
+### Phone ambient glow (dark themes only)
+
+A radial glow placed between the background and the phone makes the device feel embedded in light rather than pasted on top:
+
+```css
+.phone-glow {
+  position: absolute;
+  width: 900px; height: 900px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--brand-primary) 0%, transparent 65%);
+  filter: blur(80px);
+  opacity: 0.18;
+  top: 400px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 4;   /* above background orbs, below phone */
+}
+```
+
+Do not add glow on light backgrounds — it reads as a muddy stain.
+
+### Noise texture overlay (optional, high-end finish)
+
+A subtle SVG noise texture makes gradients feel less flat and more printed. Keep opacity very low:
+
+```css
+.slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 100;
+}
+```
+
+---
+
 ## Export Specifications
 
 ### Phone Portrait (primary — always required)
@@ -618,18 +782,22 @@ The `<head>` loads everything via CDN — no local dependencies:
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <!-- html-to-image for PNG export -->
   <script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
+  <!-- JSZip + FileSaver — bundle all exports into a single ZIP download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <!-- User's config — must come before the main script -->
   <script src="config.js"></script>
 </head>
 <body>
-  <!-- Controls bar: locale selector, theme/device switchers, export buttons -->
-  <div id="controls">...</div>
+  <!-- Top bar: app name, locale selector, Export ZIP button -->
+  <div id="topbar">...</div>
 
-  <!-- Visible preview: slides scaled to fit viewport -->
-  <div id="preview">...</div>
-
-  <!-- Overview panel: all slides in a grid at 20% scale, toggled via button -->
-  <div id="overview" style="display:none">...</div>
+  <!-- Slide grid: ALL slides visible at once, each scaled to fit viewport height.
+       This is the default and only view — no toggle needed. -->
+  <div id="slide-grid">
+    <!-- Phone slides (one .slide-wrap per slide) -->
+    <!-- Feature graphic last, same row, scaled proportionally -->
+  </div>
 
   <!-- Off-screen export canvases: always full resolution, never scaled -->
   <div id="export-canvases" style="position:fixed;left:-9999px;top:0;z-index:-1">...</div>
@@ -640,6 +808,8 @@ The `<head>` loads everything via CDN — no local dependencies:
 </body>
 </html>
 ```
+
+**Key principle: all slides are always visible in the grid. There is no "one at a time" mode and no toggle.** The grid IS the interface — it lets you QA all slides at a glance before exporting.
 
 ### Typography
 
@@ -701,62 +871,125 @@ const THEMES = {
 const theme = THEMES[config.theme];
 ```
 
-### Preview scaling
+### Slide grid scaling
 
-The visible preview scales slides to fit the browser window. The off-screen export canvases stay at full resolution — never scale them:
-
-```javascript
-// Scale visible preview to container width
-const previewScale = previewContainer.offsetWidth / PHONE_W;
-previewSlide.style.transform = `scale(${previewScale})`;
-previewSlide.style.transformOrigin = "top left";
-
-// Export canvas: always PHONE_W × PHONE_H, no transform applied
-```
-
-### Overview mode
-
-A toggle button switches between the normal preview (one slide at a time) and an overview grid (all slides at 20% scale in 3 columns). No separate page or route needed — just toggle `display:none` on the two sections:
+Scale each phone slide so it fits comfortably within the viewport height. Compute a single scale factor and apply it to all slide wrappers:
 
 ```javascript
-document.getElementById("btn-overview").addEventListener("click", () => {
-  const isOverview = document.getElementById("overview").style.display !== "none";
-  document.getElementById("preview").style.display = isOverview ? "block" : "none";
-  document.getElementById("overview").style.display = isOverview ? "none" : "grid";
+const TOPBAR_H = 52;  // height of the top controls bar in px
+
+const SCALE = Math.min(
+  (window.innerHeight - TOPBAR_H - 64) / PHONE_H,          // fit vertically
+  (window.innerWidth - 80) / (PHONE_W * config.slides.length + 20 * (config.slides.length - 1))
+);
+
+document.querySelectorAll(".slide-wrap").forEach(wrap => {
+  wrap.style.width  = `${PHONE_W * SCALE}px`;
+  wrap.style.height = `${PHONE_H * SCALE}px`;
+});
+document.querySelectorAll(".slide").forEach(slide => {
+  slide.style.transform      = `scale(${SCALE})`;
+  slide.style.transformOrigin = "top left";
 });
 ```
 
-Overview is the fastest QA tool — see all slides together, spot layout repetition, check visual variety before exporting.
+The feature graphic renders on the same row. Scale it proportionally so its height visually matches the phone slides:
+
+```javascript
+const fgScale = (PHONE_H * SCALE) / FG_H;
+fgWrap.style.width  = `${FG_W * fgScale}px`;
+fgWrap.style.height = `${FG_H * fgScale}px`;
+fgEl.style.transform      = `scale(${fgScale})`;
+fgEl.style.transformOrigin = "top left";
+```
+
+The off-screen export canvases are always at full resolution — never scale them.
 
 ---
 
 ## Feature Graphic Implementation
 
-The feature graphic is a standalone component, not a phone slide. It renders on its own 1024×500px canvas.
+The feature graphic is a standalone component, not a phone slide. It renders on its own **1024×500px** canvas.
 
-**Three styles (set via `featureGraphic.style` in config):**
+### Critical: enforce exact canvas dimensions
 
-### `gradient`
-Full canvas diagonal gradient from `brand.primary` to `brand.secondary`. App icon on the left third (centered vertically, ~180×180px). Headline on the right two thirds.
+The canvas element must be explicitly sized in CSS — never let the browser size it from content:
+
+```css
+#feature-graphic-canvas {
+  width: 1024px;
+  height: 500px;
+  position: relative;
+  overflow: hidden;
+  /* Never set width/height from JS or let it auto-size */
+}
+```
+
+In the grid preview, apply a CSS `transform: scale(...)` to resize it visually, but keep the underlying DOM element at exactly 1024×500. If the canvas is sized any other way, the exported PNG will have wrong dimensions.
+
+### Three styles (set via `featureGraphic.style` in config)
+
+#### `gradient`
+Full canvas diagonal gradient from `brand.primary` to `brand.secondary`. Overlay 2–3 blurred orbs for depth (same technique as phone slides). App icon on the left third (centered vertically, 180×180px). Headline right of center, subtext below.
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  ░░░░░░░░░░░░░░░░  gradient bg + subtle orbs  ░░░░░░░░░  │
+│                                                           │
+│   ┌──────┐   App Name                                     │
+│   │ ICON │                                                │
+│   │      │   Big headline here                            │
+│   └──────┘   Available on Google Play                     │
+│                                                           │
+└──────────────────────────────────────────────────────────┘
+```
 
 Best for: most apps. Clean, professional, works with any brand color.
 
-### `solid`
-Flat `brand.background` fill. Horizontal rule accent line using `brand.primary`. More editorial and minimal.
+#### `solid`
+Flat `brand.background` fill with a thin horizontal accent line (`brand.primary`) and large centered app icon. Headline and subtext centered below.
 
 Best for: utility apps, productivity tools, apps with a clean/minimal brand identity.
 
-### `screenshot-backed`
-App screenshot fills the right 55% of the canvas with a slight overlay. Left 45% is a solid `brand.primary` color panel. Headline sits on the solid panel. A feathered gradient fades between the two halves.
+#### `screenshot-backed`
+App screenshot fills the right 55% of the canvas (cropped, object-fit cover). Left 45% is a solid `brand.primary` panel. Feathered gradient fades between the two halves. Headline and icon sit on the solid panel.
 
 Best for: visually rich apps (photography, design, social) where showing the UI is itself a selling point.
 
-**Typography for feature graphic** (scale from `FG_W = 1024`):
+### Premium feature graphic composition
 
-```typescript
+Apply the same decorative orbs technique to the feature graphic:
+
+```css
+.fg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+/* Large orb upper-left, behind icon */
+.fg-orb-1 {
+  width: 300px; height: 300px;
+  top: -60px; left: -40px;
+  background: radial-gradient(circle, var(--brand-secondary) 0%, transparent 70%);
+  opacity: 0.40;
+}
+/* Smaller orb lower-right */
+.fg-orb-2 {
+  width: 200px; height: 200px;
+  bottom: -40px; right: 80px;
+  background: radial-gradient(circle, var(--brand-primary) 0%, transparent 70%);
+  opacity: 0.30;
+}
+```
+
+### Typography for feature graphic (scale from `FG_W = 1024`)
+
+```javascript
 const FGT = {
-  headline: FG_W * 0.058,   // ~59px — larger than phone headline
-  subtext:  FG_W * 0.028,   // ~29px
+  headline: FG_W * 0.060,   // ~61px — confident, reads at small sizes
+  subtext:  FG_W * 0.026,   // ~27px
+  appName:  FG_W * 0.030,   // ~31px — shown above the headline
 };
 ```
 
@@ -764,41 +997,37 @@ const FGT = {
 
 ## Export Mechanism
 
-Use `html-to-image` (preferred over `html2canvas` for superior CSS gradient, filter, and `clip-path` support).
+Use `html-to-image` (preferred over `html2canvas` for superior CSS gradient, filter, and `clip-path` support). Use JSZip + FileSaver.js to bundle all exports into a single ZIP download.
 
 ### Critical double-call pattern
 
 This is required for correct font and image rendering. The first call warms up lazy-loaded assets; the second produces clean output. Skipping the first call produces blurry text or missing images.
 
-```javascript
-// htmlToImage is available globally from the CDN script tag
-async function exportSlide(element, filename) {
-  // Move element temporarily on-screen — html-to-image requires visibility
-  element.style.left = "0px";
-  element.style.top = "0px";
-  element.style.position = "fixed";
-  element.style.zIndex = "9999";
+The `captureSlide` helper below implements this pattern and is used by `exportAll`:
 
-  // First call: warms up fonts and images — result is discarded
+```javascript
+// Moves the element on-screen momentarily (required by html-to-image),
+// captures twice for clean output, then returns the data URL.
+async function captureSlide(element) {
+  element.style.left     = "0px";
+  element.style.top      = "0px";
+  element.style.position = "fixed";
+  element.style.zIndex   = "9999";
+
+  // First call: warms up fonts and images — result discarded
   await htmlToImage.toPng(element, { pixelRatio: 1 });
 
   // Second call: clean, correct output
   const dataUrl = await htmlToImage.toPng(element, { pixelRatio: 1 });
 
   // Restore to off-screen position
-  element.style.left = "-9999px";
-  element.style.top = "0px";
+  element.style.left     = "-9999px";
+  element.style.top      = "0px";
   element.style.position = "fixed";
-  element.style.zIndex = "-1";
+  element.style.zIndex   = "-1";
 
-  // Trigger file download
-  const link = document.createElement("a");
-  link.download = filename;
-  link.href = dataUrl;
-  link.click();
-
-  // Small delay between exports to avoid browser throttling
   await new Promise((r) => setTimeout(r, 200));
+  return dataUrl;
 }
 ```
 
@@ -818,39 +1047,81 @@ exports/feature-graphic/
 └── feature-graphic-1024x500.png
 ```
 
-### Bulk export
+### Bulk export as ZIP
+
+All slides are collected into a single ZIP file and downloaded in one click. No individual file downloads.
 
 ```javascript
+// Capture helper — double-call pattern for clean font and image rendering
+async function captureSlide(element) {
+  element.style.left     = "0px";
+  element.style.top      = "0px";
+  element.style.position = "fixed";
+  element.style.zIndex   = "9999";
+
+  // First call: warms up lazy-loaded fonts and images — result discarded
+  await htmlToImage.toPng(element, { pixelRatio: 1 });
+  // Second call: clean, correct output
+  const dataUrl = await htmlToImage.toPng(element, { pixelRatio: 1 });
+
+  element.style.left     = "-9999px";
+  element.style.top      = "0px";
+  element.style.position = "fixed";
+  element.style.zIndex   = "-1";
+
+  await new Promise((r) => setTimeout(r, 200));
+  return dataUrl;
+}
+
 async function exportAll() {
+  const zip = new JSZip();
+  const phoneFolder = zip.folder("phone");
+  const fgFolder    = zip.folder("feature-graphic");
+
   for (const locale of config.locales) {
-    // Export phone slides
+    const localeFolder = phoneFolder.folder(locale);
+
+    // Phone slides
     for (let i = 0; i < config.slides.length; i++) {
       const el = document.getElementById(`canvas-${locale}-${config.slides[i].id}`);
       if (!el) continue;
       const name = `${String(i + 1).padStart(2, "0")}-${config.slides[i].id}-${PHONE_W}x${PHONE_H}.png`;
-      await exportSlide(el, name);
+      const dataUrl = await captureSlide(el);
+      localeFolder.file(name, dataUrl.split(",")[1], { base64: true });
     }
 
-    // Export feature graphic
+    // Feature graphic
     const fg = document.getElementById(`canvas-${locale}-feature-graphic`);
-    if (fg) await exportSlide(fg, `feature-graphic-${FG_W}x${FG_H}.png`);
+    if (fg) {
+      const dataUrl = await captureSlide(fg);
+      fgFolder.file(`feature-graphic-${FG_W}x${FG_H}.png`, dataUrl.split(",")[1], { base64: true });
+    }
 
-    // Export tablet slides (if enabled)
+    // Tablet slides (if enabled)
     if (config.tablet && config.tablet.enabled) {
       for (const size of config.tablet.sizes) {
         const W = size === "10-inch" ? TAB10_W : TAB7_W;
         const H = size === "10-inch" ? TAB10_H : TAB7_H;
+        const tabFolder = zip.folder(`tablet-${size}/${locale}`);
         for (let i = 0; i < config.slides.length; i++) {
           const el = document.getElementById(`canvas-tablet-${size}-${locale}-${config.slides[i].id}`);
           if (!el) continue;
           const name = `${String(i + 1).padStart(2, "0")}-${config.slides[i].id}-${W}x${H}.png`;
-          await exportSlide(el, name);
+          const dataUrl = await captureSlide(el);
+          tabFolder.file(name, dataUrl.split(",")[1], { base64: true });
         }
       }
     }
   }
+
+  // Generate and trigger download of the ZIP
+  const appSlug = config.app.name.replace(/\s+/g, "-").toLowerCase();
+  const blob = await zip.generateAsync({ type: "blob" });
+  saveAs(blob, `${appSlug}-play-store-screenshots.zip`);
 }
 ```
+
+One click produces `focusflow-play-store-screenshots.zip` containing all slides organized by type and locale. Ready to unzip and upload to Play Console.
 
 ---
 

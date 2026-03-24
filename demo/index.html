@@ -9,29 +9,104 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: #111;
+    background: #09090B;
     font-family: 'Inter', sans-serif;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
     min-height: 100vh;
-    padding: 40px;
   }
 
+  /* ── PAGE CHROME ── */
+  .page-topbar {
+    height: 52px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .topbar-logo {
+    width: 24px; height: 24px;
+    background: linear-gradient(135deg, #22C55E 0%, #15803D 100%);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .topbar-logo svg { width: 14px; height: 14px; }
+  .topbar-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.80);
+    letter-spacing: -0.01em;
+  }
+  .topbar-divider {
+    width: 1px; height: 14px;
+    background: rgba(255,255,255,0.10);
+    margin: 0 6px;
+  }
+  .topbar-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.30);
+    font-weight: 400;
+  }
+  .topbar-spacer { flex: 1; }
+  .topbar-count {
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+    font-weight: 500;
+    margin-right: 8px;
+  }
+  .topbar-btn {
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.60);
+  }
+  .topbar-btn-primary {
+    background: #22C55E;
+    border-color: transparent;
+    color: white;
+  }
+
+  /* ── SHOWCASE ── */
+  .showcase-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 40px;
+  }
+
+  /* Captured by generate-example.js */
   .showcase {
     display: flex;
-    gap: 24px;
+    flex-wrap: nowrap;
+    gap: 18px;
     align-items: flex-start;
+    width: max-content;  /* prevent flex from collapsing to content of just 2 items */
   }
 
   /* Each slide is 1080x1920 rendered at 0.3 scale = 324x576 */
   .slide-wrap {
     width: 324px;
     height: 576px;
-    border-radius: 16px;
+    border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.07),
+      0 48px 120px rgba(0,0,0,0.75),
+      0 20px 48px rgba(0,0,0,0.50);
     flex-shrink: 0;
+    position: relative;
   }
 
   .slide {
@@ -43,10 +118,30 @@
     overflow: hidden;
   }
 
+  /* ── DECORATIVE ORBS ── */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
   /* ── SLIDE BACKGROUNDS ── */
-  .slide-1 { background: #FAF6F0; }
-  .slide-2 { background: #0A0A0A; }
-  .slide-3 { background: #FAF6F0; }
+  .slide-1 { background: linear-gradient(155deg, #1E0A00 0%, #2F1500 55%, #1A0900 100%); }
+  .slide-2 { background: linear-gradient(155deg, #07051A 0%, #110A28 55%, #060414 100%); }
+  .slide-3 { background: linear-gradient(155deg, #FDF9F5 0%, #F6ECD9 55%, #FAF5EE 100%); }
+
+  /* noise overlay */
+  .slide::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 100;
+  }
 
   /* ── TEXT BLOCK ── */
   .text-block {
@@ -54,122 +149,156 @@
     top: 0;
     left: 0;
     right: 0;
-    padding-top: 115px;
+    padding-top: 90px;
     text-align: center;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-  .label {
-    font-size: 30px;
+  .app-icon {
+    width: 76px; height: 76px;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 22px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+    background: #1C1C1E;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── PILL LABEL ── */
+  .label-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 32px;
+    border-radius: 100px;
+    font-size: 28px;
     font-weight: 700;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.13em;
     text-transform: uppercase;
-    margin-bottom: 28px;
+    margin-bottom: 30px;
+  }
+  .label-warm {
+    background: rgba(217,119,6,0.18);
+    color: #FBB740;
+    border: 1.5px solid rgba(217,119,6,0.35);
+  }
+  .label-violet {
+    background: rgba(139,92,246,0.15);
+    color: #C4B5FD;
+    border: 1.5px solid rgba(139,92,246,0.28);
+  }
+  .label-amber-light {
+    background: rgba(201,130,42,0.12);
+    color: #92600E;
+    border: 1.5px solid rgba(201,130,42,0.25);
   }
 
   .headline {
-    font-size: 108px;
+    font-size: 105px;
     font-weight: 800;
-    line-height: 1.05;
-    margin-bottom: 36px;
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    margin-bottom: 34px;
     white-space: pre-line;
   }
 
   .subtext {
-    font-size: 42px;
+    font-size: 40px;
     font-weight: 400;
-    line-height: 1.4;
-    opacity: 0.7;
+    line-height: 1.45;
     padding: 0 80px;
   }
 
-  /* Slide 1 — warm light */
-  .slide-1 .label   { color: #C9822A; }
-  .slide-1 .headline { color: #2D1800; }
-  .slide-1 .subtext  { color: #2D1800; }
+  .slide-1 .headline { color: #FFFBF5; text-shadow: 0 4px 48px rgba(0,0,0,0.45); }
+  .slide-1 .subtext  { color: rgba(255,241,215,0.50); }
 
-  /* Slide 2 — dark bold */
-  .slide-2 .label   { color: #7C3AED; }
-  .slide-2 .headline { color: #FFFFFF; }
-  .slide-2 .subtext  { color: rgba(255,255,255,0.65); }
+  .slide-2 .headline { color: #FFFFFF; text-shadow: 0 4px 48px rgba(0,0,0,0.55); }
+  .slide-2 .subtext  { color: rgba(255,255,255,0.40); }
 
-  /* Slide 3 — warm light */
-  .slide-3 .label   { color: #C9822A; }
-  .slide-3 .headline { color: #2D1800; }
-  .slide-3 .subtext  { color: #2D1800; }
+  .slide-3 .headline { color: #1A0900; }
+  .slide-3 .subtext  { color: rgba(26,9,0,0.52); }
 
-  /* ── PHONE FRAME ── */
+  /* ── PHONE FRAME (CSS-only) ── */
   .phone-wrap {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    top: 576px; /* PHONE_H * 0.30 */
+    top: 640px;
     z-index: 5;
+  }
+
+  /* Ambient glow behind phone — dark slides only */
+  .phone-glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 4;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .phone {
     position: relative;
-    width: 843px; /* PHONE_W * 0.78 */
-    height: 1821px; /* 843 * 2.16 */
+    width: 843px;
+    height: 1821px;
     background: #1C1C1E;
-    border-radius: 76px; /* 843 * 0.09 */
-    border: 4px solid #3A3A3C; /* 843 * 0.005 */
+    border-radius: 76px;
+    border: 4px solid #3A3A3C;
     box-shadow:
-      0 0 0 1px rgba(255,255,255,0.06),
-      0 32px 100px rgba(0,0,0,0.35),
-      0 12px 32px rgba(0,0,0,0.20);
+      0 0 0 1px rgba(255,255,255,0.07),
+      0 48px 140px rgba(0,0,0,0.55),
+      0 20px 48px rgba(0,0,0,0.35);
     overflow: hidden;
   }
 
-  /* white frame variant */
   .phone.light {
-    background: #E8E8ED;
-    border-color: #C8C8CE;
+    background: #E5E5EA;
+    border-color: #C7C7CC;
     box-shadow:
       0 0 0 1px rgba(0,0,0,0.06),
-      0 32px 100px rgba(0,0,0,0.18),
-      0 12px 32px rgba(0,0,0,0.10);
+      0 48px 140px rgba(0,0,0,0.24),
+      0 20px 48px rgba(0,0,0,0.14);
   }
 
   .phone-screen {
     position: absolute;
-    top: 40px;  /* 1821 * 0.022 */
-    left: 21px; /* 843 * 0.025 */
+    top: 40px;
+    left: 21px;
     right: 21px;
-    bottom: 44px; /* 1821 * 0.024 */
+    bottom: 44px;
     border-radius: 58px;
     overflow: hidden;
   }
 
-  /* punch-hole camera */
+  /* Punch-hole camera */
   .phone::before {
     content: '';
     position: absolute;
-    top: 29px; /* 1821 * 0.016 */
+    top: 29px;
     left: 50%;
     transform: translateX(-50%);
-    width: 22px; /* 843 * 0.026 */
-    height: 22px;
+    width: 22px; height: 22px;
     background: #0a0a0a;
     border-radius: 50%;
     z-index: 20;
   }
-  .phone.light::before { background: #C8C8CE; }
+  .phone.light::before { background: #B0B0B8; }
 
-  /* home indicator */
+  /* Home indicator */
   .phone::after {
     content: '';
     position: absolute;
-    bottom: 25px; /* 1821 * 0.014 */
+    bottom: 25px;
     left: 50%;
     transform: translateX(-50%);
-    width: 236px; /* 843 * 0.28 */
-    height: 5px;  /* 1821 * 0.003 */
-    background: rgba(255,255,255,0.25);
+    width: 236px; height: 5px;
+    background: rgba(255,255,255,0.20);
     border-radius: 3px;
     z-index: 20;
   }
-  .phone.light::after { background: rgba(0,0,0,0.18); }
+  .phone.light::after { background: rgba(0,0,0,0.13); }
 
   /* ────────────────────────────────────────
      SLIDE 1 — App screen: Home / prayer list
@@ -341,10 +470,8 @@
     background: #7C3AED;
     color: white;
   }
-  /* Timer ring */
   .screen-2 .timer-ring {
-    width: 500px;
-    height: 500px;
+    width: 500px; height: 500px;
     position: relative;
     display: flex;
     align-items: center;
@@ -357,18 +484,18 @@
     width: 100%; height: 100%;
     transform: rotate(-90deg);
   }
-  .screen-2 .timer-ring .ring-bg {
+  .screen-2 .ring-bg {
     fill: none;
     stroke: rgba(255,255,255,0.06);
     stroke-width: 16;
   }
-  .screen-2 .timer-ring .ring-fill {
+  .screen-2 .ring-fill {
     fill: none;
     stroke: #7C3AED;
     stroke-width: 16;
     stroke-linecap: round;
     stroke-dasharray: 1382;
-    stroke-dashoffset: 346; /* ~75% progress */
+    stroke-dashoffset: 346;
   }
   .screen-2 .timer-inner {
     text-align: center;
@@ -391,8 +518,7 @@
     margin-bottom: 60px;
   }
   .screen-2 .play-btn {
-    width: 140px;
-    height: 140px;
+    width: 140px; height: 140px;
     background: #7C3AED;
     border-radius: 50%;
     display: flex;
@@ -401,8 +527,7 @@
     box-shadow: 0 0 0 24px rgba(124,58,237,0.15);
   }
   .screen-2 .play-icon {
-    width: 0;
-    height: 0;
+    width: 0; height: 0;
     border-style: solid;
     border-width: 30px 0 30px 52px;
     border-color: transparent transparent transparent white;
@@ -488,10 +613,7 @@
     width: 100%;
     border-radius: 8px 8px 0 0;
   }
-  .screen-3 .s3-bar-day {
-    font-size: 20px;
-    color: #bbb;
-  }
+  .screen-3 .s3-bar-day { font-size: 20px; color: #bbb; }
   .screen-3 .s3-streak {
     margin: 0 36px;
     background: white;
@@ -502,33 +624,67 @@
     align-items: center;
     gap: 24px;
   }
-  .screen-3 .s3-streak-icon {
-    font-size: 60px;
-  }
+  .screen-3 .s3-streak-icon { font-size: 60px; }
   .screen-3 .s3-streak-text { flex: 1; }
   .screen-3 .s3-streak-num {
     font-size: 40px;
     font-weight: 800;
     color: #C9822A;
   }
-  .screen-3 .s3-streak-label {
-    font-size: 26px;
-    color: #888;
-  }
+  .screen-3 .s3-streak-label { font-size: 26px; color: #888; }
 </style>
 </head>
 <body>
+
+<div class="page-topbar">
+  <div class="topbar-logo">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 4l16 8-16 8V4z" fill="white"/>
+    </svg>
+  </div>
+  <span class="topbar-title">Play Store Screenshots</span>
+  <div class="topbar-divider"></div>
+  <span class="topbar-sub">Demo — 3 slides</span>
+  <div class="topbar-spacer"></div>
+  <span class="topbar-count">en · 1080×1920</span>
+  <button class="topbar-btn">Preview</button>
+  <button class="topbar-btn topbar-btn-primary">Export ZIP</button>
+</div>
+
+<div class="showcase-wrapper">
 <div class="showcase" id="showcase">
 
   <!-- ── SLIDE 1: Hero ── -->
   <div class="slide-wrap">
-    <div class="slide slide-1" id="slide-1">
+    <div class="slide slide-1">
+
+      <!-- Background orbs -->
+      <div class="orb" style="width:700px;height:700px;top:-160px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,#D97706 0%,transparent 70%);filter:blur(140px);opacity:0.22;"></div>
+      <div class="orb" style="width:900px;height:900px;top:560px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,#B45309 0%,transparent 70%);filter:blur(160px);opacity:0.18;"></div>
+
       <div class="text-block">
-        <div class="label">AARTI MANDIR</div>
+        <div class="app-icon">
+          <!-- App icon placeholder — rendered as a warm gradient circle in demo -->
+          <svg width="76" height="76" viewBox="0 0 76 76" fill="none">
+            <rect width="76" height="76" rx="18" fill="url(#icon-grad-1)"/>
+            <text x="38" y="52" text-anchor="middle" font-size="32" font-family="Inter,sans-serif">🕉</text>
+            <defs>
+              <linearGradient id="icon-grad-1" x1="0" y1="0" x2="76" y2="76" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#E8920A"/>
+                <stop offset="100%" stop-color="#9A3E00"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="label-pill label-warm">Aarti Mandir</div>
         <div class="headline">Every prayer.
 At your fingertips.</div>
         <div class="subtext">Aarti · Chalisa · Mantra — all in one place</div>
       </div>
+
+      <!-- Phone ambient glow -->
+      <div class="phone-glow" style="width:800px;height:800px;top:640px;background:radial-gradient(circle,#C9822A 0%,transparent 65%);filter:blur(90px);opacity:0.14;"></div>
+
       <div class="phone-wrap">
         <div class="phone light">
           <div class="phone-screen">
@@ -553,12 +709,12 @@ At your fingertips.</div>
               <div class="section-label">All Aartis</div>
               <div class="grid">
                 <div class="grid-item">
-                  <div class="grid-item-bg" style="background: linear-gradient(160deg,#e8a445,#c9822a);">
+                  <div class="grid-item-bg" style="background:linear-gradient(160deg,#e8a445,#c9822a);">
                     <span class="grid-item-label">Aarti Jai Ganesh</span>
                   </div>
                 </div>
                 <div class="grid-item">
-                  <div class="grid-item-bg" style="background: linear-gradient(160deg,#5b9bd5,#2d6fa3);">
+                  <div class="grid-item-bg" style="background:linear-gradient(160deg,#5b9bd5,#2d6fa3);">
                     <span class="grid-item-label">Aarti Om Jai Jagdish</span>
                   </div>
                 </div>
@@ -567,18 +723,41 @@ At your fingertips.</div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 
   <!-- ── SLIDE 2: Focus Timer (dark) ── -->
   <div class="slide-wrap">
-    <div class="slide slide-2" id="slide-2">
+    <div class="slide slide-2">
+
+      <!-- Background orbs -->
+      <div class="orb" style="width:750px;height:750px;top:-200px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,#7C3AED 0%,transparent 70%);filter:blur(140px);opacity:0.28;"></div>
+      <div class="orb" style="width:900px;height:900px;top:600px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,#4338CA 0%,transparent 70%);filter:blur(170px);opacity:0.20;"></div>
+
       <div class="text-block">
-        <div class="label">FOCUS SESSION</div>
+        <div class="app-icon">
+          <svg width="76" height="76" viewBox="0 0 76 76" fill="none">
+            <rect width="76" height="76" rx="18" fill="url(#icon-grad-2)"/>
+            <circle cx="38" cy="38" r="18" stroke="white" stroke-width="3" fill="none"/>
+            <path d="M38 26v14l8 8" stroke="white" stroke-width="3" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="icon-grad-2" x1="0" y1="0" x2="76" y2="76" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#7C3AED"/>
+                <stop offset="100%" stop-color="#4338CA"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="label-pill label-violet">Focus Session</div>
         <div class="headline">Deep work.
 No distractions.</div>
         <div class="subtext">25-minute sessions built around how your brain works.</div>
       </div>
+
+      <!-- Phone ambient glow -->
+      <div class="phone-glow" style="width:860px;height:860px;top:640px;background:radial-gradient(circle,#7C3AED 0%,transparent 65%);filter:blur(90px);opacity:0.16;"></div>
+
       <div class="phone-wrap">
         <div class="phone">
           <div class="phone-screen">
@@ -615,18 +794,39 @@ No distractions.</div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 
   <!-- ── SLIDE 3: Stats ── -->
   <div class="slide-wrap">
-    <div class="slide slide-3" id="slide-3">
+    <div class="slide slide-3">
+
+      <!-- Background orbs (very soft, light theme) -->
+      <div class="orb" style="width:700px;height:700px;top:-180px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,#F59E0B 0%,transparent 70%);filter:blur(140px);opacity:0.10;"></div>
+      <div class="orb" style="width:800px;height:800px;top:600px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,#C9822A 0%,transparent 70%);filter:blur(160px);opacity:0.09;"></div>
+
       <div class="text-block">
-        <div class="label">WEEKLY INSIGHTS</div>
+        <div class="app-icon">
+          <svg width="76" height="76" viewBox="0 0 76 76" fill="none">
+            <rect width="76" height="76" rx="18" fill="url(#icon-grad-3)"/>
+            <rect x="18" y="40" width="8" height="22" rx="2" fill="white" opacity="0.9"/>
+            <rect x="32" y="28" width="8" height="34" rx="2" fill="white"/>
+            <rect x="46" y="34" width="8" height="28" rx="2" fill="white" opacity="0.9"/>
+            <defs>
+              <linearGradient id="icon-grad-3" x1="0" y1="0" x2="76" y2="76" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#F59E0B"/>
+                <stop offset="100%" stop-color="#C9822A"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="label-pill label-amber-light">Weekly Insights</div>
         <div class="headline">See what's
 actually working.</div>
         <div class="subtext">Spot your most productive hours and focus streaks.</div>
       </div>
+
       <div class="phone-wrap">
         <div class="phone light">
           <div class="phone-screen">
@@ -671,9 +871,12 @@ actually working.</div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 
 </div>
+</div>
+
 </body>
 </html>

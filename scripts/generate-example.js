@@ -32,19 +32,18 @@ function serve(root, port) {
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
-  // Wide enough to fit 3 slides (324px each) + gaps + padding
-  await page.setViewportSize({ width: 1160, height: 680 });
+  await page.setViewportSize({ width: 1400, height: 700 });
 
   console.log('Loading demo...');
   await page.goto(`http://localhost:${PORT}/demo/index.html`);
 
-  // Wait for fonts to load
+  // Wait for fonts and SVG filters to settle
   await page.waitForFunction(() => document.fonts.ready);
-  await page.waitForTimeout(800);
+  await page.waitForTimeout(1200);
 
   console.log('Capturing screenshot...');
-  const showcase = await page.$('#showcase');
-  const buffer = await showcase.screenshot({ type: 'png' });
+  // Capture the full page so nothing is clipped
+  const buffer = await page.screenshot({ type: 'png', fullPage: true });
 
   const outPath = path.join(REPO_ROOT, 'example.png');
   fs.writeFileSync(outPath, buffer);

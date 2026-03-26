@@ -283,15 +283,17 @@ Every phone slide uses the same composition: **text at the top, large phone belo
 
 | Property | Value |
 |---|---|
-| Phone width | `PHONE_W * 0.78` (≈843px) |
-| Phone height | `phoneWidth * 2.16` (≈1821px — taller than canvas) |
+| Phone width | `PHONE_W * 0.82` (≈885px) |
+| Phone height | `phoneWidth * 2.15` (≈1903px — taller than canvas) |
 | Phone left | `(PHONE_W - phoneWidth) / 2` (centered) |
-| Phone top | `PHONE_H * 0.30` (≈576px from top) |
+| Phone top | `PHONE_H * 0.34` (≈653px from top) |
 | Bottom crop | ~25% of phone height clips off canvas — intentional, adds depth |
 
 The phone bottom extending past the canvas edge is intentional and desirable — it grounds the phone visually and removes the awkward empty space that appears when the whole frame is visible.
 
 **Text block positioning:**
+
+The text container spans `height: PHONE_H * 0.32` with `overflow: hidden`. Content is vertically centered within it. The phone starts at `PHONE_H * 0.34`, leaving a ~2% breathing gap between the text block bottom and the phone top edge — this prevents the label chip or last headline line from touching the device frame.
 
 | Element | Position |
 |---|---|
@@ -300,7 +302,7 @@ The phone bottom extending past the canvas edge is intentional and desirable —
 | Headline | Below label, centered, `font-size: PHONE_W * 0.09` |
 | Subtext | Below headline, centered, `font-size: PHONE_W * 0.038` |
 
-Keep the entire text block within the top 28% of canvas height. If the text runs long, shorten the headline — do not push the phone lower.
+Keep the entire text block within the top 32% of canvas height (the container enforces this with `overflow: hidden`). If text overflows, shorten the headline — do not push the phone lower.
 
 ---
 
@@ -315,13 +317,33 @@ Background fills the full canvas using the chosen `featureGraphic.style`.
 
 ---
 
-### What not to use
+### Supported layouts
 
-**`text-bottom`** — text below the phone — consistently looks worse. The phone floats awkwardly at the top and the text block at the bottom feels disconnected.
+The template implements exactly two layouts:
 
-**`split-screen`** — colored panel + phone — the panel dominates and the phone ends up small. Do not use.
+- **`text-top`** — use this for most slides (described above)
+- **`full-bleed`** — full-screen screenshot with a gradient overlay; text floats at the top
 
-**`hero-left` / `hero-right`** — side-by-side horizontal — leaves large dead areas on a portrait canvas. Do not use.
+Any other `layout` value will render a red error box. Do not write slides with `layout: "text-bottom"`, `layout: "split-screen"`, `layout: "hero-left"`, or `layout: "hero-right"` — they are not implemented.
+
+#### `full-bleed` layout
+
+The screenshot fills the entire canvas (`width:100%; height:100%; object-fit:cover`). A dark gradient fades from the top (~35% height) to transparent, sitting above the screenshot. Label and headline float over this gradient at the top, in white. No device mockup.
+
+Use this for one slide only — it works best when the app screenshot is visually compelling on its own. Never use it for screenshots showing dense UI (lists, settings). Avoid pairing consecutive `full-bleed` slides.
+
+```
+┌─────────────────────┐
+│   LABEL             │  ← white text over gradient
+│   Big headline      │
+│   here.             │
+│▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│  ← gradient fade
+│                     │
+│  [screenshot fills  │
+│   entire canvas]    │
+│                     │
+└─────────────────────┘
+```
 
 ---
 
@@ -336,27 +358,27 @@ Props: `screenshot` (string path), `color` ("black" | "white" | "silver"), `widt
 Rendered structure and key proportions (all values derived from component `width` / `height`):
 
 ```
-┌──────────────────────┐  outer frame (corner radius: width*0.09 — refined, not bulky)
-│          ●           │  punch-hole camera: width*0.026 diameter, centered, top height*0.016
-│  ┌────────────────┐  │  screen: left/right inset width*0.025, top/bottom inset height*0.022
+┌──────────────────────┐  outer frame (corner radius: width*0.12)
+│          ●           │  punch-hole camera: width*0.028 diameter, centered, top height*0.018
+│  ┌────────────────┐  │  screen: left/right inset width*0.030, top/bottom inset height*0.025
 │  │                │  │
 │  │  [screenshot]  │  │
 │  │                │  │
 │  └────────────────┘  │
-│        ───────       │  home indicator: width*0.28 wide, height*0.003 tall, bottom height*0.014
+│        ───────       │  home indicator: width*0.30 wide, height*0.003 tall, bottom height*0.015
 └──────────────────────┘
 ```
 
 | Property | Value |
 |---|---|
-| Outer corner radius | `width * 0.09` |
-| Frame border thickness | `width * 0.005` |
-| Screen left/right inset | `width * 0.025` |
-| Screen top inset | `height * 0.022` |
-| Screen bottom inset | `height * 0.024` |
-| Camera diameter | `width * 0.026` |
-| Camera center from top | `height * 0.016` |
-| Home indicator width | `width * 0.28` |
+| Outer corner radius | `width * 0.12` |
+| Frame border thickness | `width * 0.008` |
+| Screen left/right inset | `width * 0.030` |
+| Screen top inset | `height * 0.025` |
+| Screen bottom inset | `height * 0.028` |
+| Camera diameter | `width * 0.028` |
+| Camera center from top | `height * 0.018` |
+| Home indicator width | `width * 0.30` |
 | Home indicator height | `height * 0.003` |
 | Home indicator from bottom | `height * 0.014` |
 
@@ -435,16 +457,17 @@ Adjust orb opacity by theme:
 The label must be a pill-shaped badge with a background — not plain text. This single change makes slides look designed rather than assembled.
 
 ```css
+/* All values below are illustrative — scale relative to W as shown in comments */
 .label-pill {
   display: inline-flex;
   align-items: center;
-  padding: 12px 32px;
+  padding: 12px 32px;     /* W*0.011 W*0.030 */
   border-radius: 100px;
-  font-size: 28px;        /* PHONE_W * 0.026 */
+  font-size: 28px;        /* W * 0.026 */
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  margin-bottom: 32px;
+  margin-bottom: 32px;    /* W * 0.030 */
 }
 
 /* Dark theme — glass/translucent variant */
@@ -474,12 +497,12 @@ The label must be a pill-shaped badge with a background — not plain text. This
 Apply tight letter-spacing and a subtle text shadow for depth:
 
 ```css
+/* font-size must be set via inline style using the proportional system — not hardcoded */
 .headline {
-  font-size: 108px;       /* PHONE_W * 0.10 */
+  /* font-size: W * 0.090  (set inline, not in CSS class) */
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.02em;
-  white-space: pre-line;
 }
 
 /* Dark theme only */
@@ -832,6 +855,16 @@ function typography(W) {
 
 This ensures text renders correctly at all export resolutions without changes.
 
+### Rendering headline newlines
+
+**Critical:** Headlines in `config.js` use `\n` to break lines (e.g. `"Every prayer.\nAt your fingertips."`). Never rely on `white-space: pre-line` to render these — that only works with actual newline characters, not the literal two-character sequence `\n` that config values may contain. Always convert using a helper before inserting into innerHTML:
+
+```javascript
+const nl2br = (text) => text.replace(/\\n|\n/g, '<br>');
+```
+
+Use `nl2br(slide.headline)` and `nl2br(slide.subtext)` everywhere you insert these values into HTML.
+
 ### Theme System
 
 Four named themes as plain JS objects. The `config.theme` key selects between them:
@@ -1165,10 +1198,8 @@ Check all of these before exporting final assets.
 - [ ] Subtext (when present) adds information, not repetition
 
 **Visual**
-- [ ] No two consecutive slides use the same layout template
-- [ ] At least one high-contrast treatment slide in the set (e.g. dark slide in a light set)
-- [ ] Phone position and size varies across slides — not always centered at the same scale
-- [ ] Text never overlaps with the phone frame
+- [ ] All slides use `layout: "text-top"` (or `"full-bleed"` for at most one slide) — no other layout values
+- [ ] Text never overlaps with the phone frame (keep headline short if it risks overflow)
 - [ ] The feature graphic reads clearly at 50% scale (how it appears in Play Store search results)
 
 **Play Store compliance**
